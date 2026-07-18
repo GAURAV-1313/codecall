@@ -101,6 +101,8 @@ export interface Summary {
     weakAreas: string[];
     estimatedSessionMastery: "emerging" | "developing" | "demonstrated";
     keyTakeaways: string[];
+    pointsToRemember: string[];
+    edgeCasesForOtherProjects: string[];
     limitations: string[];
 }
 export type LearnEventType = "SESSION_STARTED" | "CONTEXT_READY" | "OPPORTUNITY_DETECTED" | "CONCEPTS_EXTRACTED" | "PLAN_CREATED" | "LEARNING_RECOMMENDATION_PRESENTED" | "DECISION_RECORDED" | "CONFIDENCE_RECORDED" | "LESSON_READY" | "QUESTION_PRESENTED" | "QUESTION_ANSWERED" | "ANSWER_EVALUATED" | "REINFORCEMENT_READY" | "SUMMARY_READY" | "SESSION_FINISHED" | "SESSION_CANCELLED" | "OPERATION_FAILED";

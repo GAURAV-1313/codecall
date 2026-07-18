@@ -70,7 +70,13 @@ If the developer skips or cancels, stop without teaching.
      implementation, then ask a new isomorphic question.
    - Enough evidence for the objective or time limit: finish.
 6. End with concepts learned, remaining weak areas, key takeaways, and
-   **estimated session mastery**. Never claim permanent mastery.
+   **estimated session mastery**. Then add:
+   - **Points to remember:** 3–5 durable technical heuristics grounded in the
+     implementation.
+   - **Edge cases for other projects:** only the relevant assumptions,
+     boundaries, or failure modes to check before reusing the pattern.
+   Tie both sections to the session's concepts and decisions. Never use generic
+   filler or claim permanent mastery.
 
 ## Reliability and privacy
 

@@ -62,6 +62,8 @@ describe("learn runtime", () => {
 
     expect(session.state).toBe("completed");
     expect(session.summary?.estimatedSessionMastery).toBe("demonstrated");
+    expect(session.summary?.pointsToRemember).toHaveLength(3);
+    expect(session.summary?.edgeCasesForOtherProjects).toHaveLength(2);
   });
 
   it("cancels without teaching when declined", async () => {

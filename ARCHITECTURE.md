@@ -295,7 +295,9 @@ interface Evaluation {
 
 interface Summary {
   conceptsLearned: LearnedConcept[]; weakAreas: WeakArea[];
-  estimatedMastery: MasteryEstimate; takeaways: string[]; limitations: string[];
+  estimatedMastery: MasteryEstimate; takeaways: string[];
+  pointsToRemember: string[]; edgeCasesForOtherProjects: string[];
+  limitations: string[];
 }
 ```
 

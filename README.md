@@ -51,7 +51,9 @@ requirement.
 It first presents a Start/Skip recommendation. After Start, it teaches one
 implementation-specific concept and asks one reasoning question at a time.
 Your answer determines whether it reinforces, deepens, or advances. It finishes
-with concepts covered, weak areas, and an estimated session mastery.
+with concepts covered, weak areas, and an estimated session mastery. The final
+summary also gives implementation-grounded points to remember and only the
+relevant edge cases to check before applying the pattern in another project.
 
 The installable skill source is in [`skill/`](skill/SKILL.md).
 
@@ -107,7 +109,7 @@ Providers render `runtime.history(session.id)` as their native UI: `/learn`, a
 tool call, or a non-blocking post-task recommendation. Core workers never
 depend on a provider SDK.
 
-## What ships in v0.1.0
+## What ships in v0.1.2
 
 - append-only, typed session events and an explicit state machine;
 - progressive minimal context represented as evidence references;
@@ -115,6 +117,7 @@ depend on a provider SDK.
   not LOC;
 - separated concept categories, dependency-aware planning, and a bounded plan;
 - an adaptive teach → one MCQ → evaluate → reinforce/advance loop;
+- final transfer guidance: points to remember plus cross-project edge cases;
 - pluggable worker and documentation-provider contracts;
 - in-memory and caller-owned JSONL event stores;
 - deterministic default workers suitable for local demonstration and tests.

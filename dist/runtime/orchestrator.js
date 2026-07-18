@@ -100,6 +100,15 @@ export class LearnRuntime {
             weakAreas: session.incorrectAnswers ? ["One or more concepts needed reinforcement."] : [],
             estimatedSessionMastery: session.incorrectAnswers === 0 ? "demonstrated" : "developing",
             keyTakeaways: concepts.map((name) => `Connect ${name.toLowerCase()} to the implementation constraint it satisfies.`),
+            pointsToRemember: [
+                "Start from the implementation constraint, not a detached definition.",
+                "Confirm prerequisites before dependent behavior runs.",
+                "Use evidence from the current implementation before generalizing a pattern."
+            ],
+            edgeCasesForOtherProjects: [
+                "Check whether the same prerequisite or boundary exists in the new project's execution path.",
+                "Do not reuse the pattern unchanged when its security, failure, or dependency assumptions differ."
+            ],
             limitations: ["This is an estimate of understanding demonstrated in this session, not long-term mastery."]
         };
     }

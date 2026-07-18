@@ -100,7 +100,7 @@ async function main() {
                 console.log(`\n${feedback.feedback}`);
         }
         if (session.summary)
-            console.log(`\nSession complete\nMastery: ${session.summary.estimatedSessionMastery}\nTakeaways:\n- ${session.summary.keyTakeaways.join("\n- ")}`);
+            console.log(`\nSession complete\nMastery: ${session.summary.estimatedSessionMastery}\nTakeaways:\n- ${session.summary.keyTakeaways.join("\n- ")}\nPoints to remember:\n- ${session.summary.pointsToRemember.join("\n- ")}\nEdge cases for other projects:\n- ${session.summary.edgeCasesForOtherProjects.join("\n- ")}`);
     }
     finally {
         rl.close();

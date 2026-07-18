@@ -133,6 +133,8 @@ export interface Summary {
   weakAreas: string[];
   estimatedSessionMastery: "emerging" | "developing" | "demonstrated";
   keyTakeaways: string[];
+  pointsToRemember: string[];
+  edgeCasesForOtherProjects: string[];
   limitations: string[];
 }
 
