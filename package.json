@@ -1,0 +1,55 @@
+{
+  "name": "@gaurav-1313/learn",
+  "version": "0.1.0",
+  "license": "MIT",
+  "type": "module",
+  "description": "Implementation-grounded adaptive learning sessions for coding agents.",
+  "keywords": [
+    "codex",
+    "skill",
+    "learning",
+    "developer-education"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/GAURAV-1313/learn.git"
+  },
+  "bugs": {
+    "url": "https://github.com/GAURAV-1313/learn/issues"
+  },
+  "homepage": "https://github.com/GAURAV-1313/learn#readme",
+  "engines": {
+    "node": ">=20"
+  },
+  "files": [
+    "dist",
+    "skill",
+    "README.md",
+    "ARCHITECTURE.md",
+    "LICENSE"
+  ],
+  "main": "./dist/public.js",
+  "types": "./dist/public.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/public.d.ts",
+      "import": "./dist/public.js"
+    }
+  },
+  "bin": {
+    "learn": "./dist/cli.js"
+  },
+  "scripts": {
+    "build": "node scripts/clean.mjs && tsc -p tsconfig.json",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "prepare": "npm run build",
+    "prepack": "npm run build",
+    "postinstall": "node ./dist/install-skill.js --global-only"
+  },
+  "devDependencies": {
+    "@types/node": "latest",
+    "typescript": "latest",
+    "vitest": "latest"
+  }
+}
