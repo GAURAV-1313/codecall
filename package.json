@@ -1,11 +1,12 @@
 {
   "name": "@gaurav-1313/learn",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "license": "MIT",
   "type": "module",
-  "description": "Implementation-grounded adaptive learning sessions for coding agents.",
+  "description": "Implementation-grounded adaptive learning skills for Codex and Claude Code.",
   "keywords": [
     "codex",
+    "claude-code",
     "skill",
     "learning",
     "developer-education"

@@ -2,10 +2,12 @@ import { cpSync, existsSync, mkdirSync } from "node:fs";
 import { homedir } from "node:os";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
-/** Copy the packaged Codex skill into the user's discoverable skill directory. */
-export function installSkill(destinationRoot = process.env.CODEX_HOME ? join(process.env.CODEX_HOME, "skills") : join(homedir(), ".codex", "skills")) {
+function packagedSkillSource() {
     const here = dirname(fileURLToPath(import.meta.url));
-    const source = join(here, "..", "skill");
+    return join(here, "..", "skill");
+}
+function copySkill(destinationRoot) {
+    const source = packagedSkillSource();
     if (!existsSync(source))
         throw new Error(`Packaged skill source was not found: ${source}`);
     mkdirSync(destinationRoot, { recursive: true });
@@ -13,14 +15,23 @@ export function installSkill(destinationRoot = process.env.CODEX_HOME ? join(pro
     cpSync(source, destination, { recursive: true, force: true });
     return destination;
 }
+/** Copy the packaged skill into Codex's discoverable skill directory. */
+export function installSkill(destinationRoot = process.env.CODEX_HOME ? join(process.env.CODEX_HOME, "skills") : join(homedir(), ".codex", "skills")) {
+    return copySkill(destinationRoot);
+}
+/** Copy the same Agent Skills-standard skill into Claude Code's personal directory. */
+export function installClaudeSkill(destinationRoot = process.env.CLAUDE_CONFIG_DIR ? join(process.env.CLAUDE_CONFIG_DIR, "skills") : join(homedir(), ".claude", "skills")) {
+    return copySkill(destinationRoot);
+}
 const invokedAsScript = process.argv[1] && fileURLToPath(import.meta.url) === process.argv[1];
 if (invokedAsScript) {
     if (process.argv.includes("--global-only") && process.env.npm_config_global !== "true")
         process.exit(0);
     try {
         console.log(`Installed Codex skill at ${installSkill()}`);
+        console.log(`Installed Claude Code skill at ${installClaudeSkill()}`);
     }
     catch (error) {
-        console.warn(`Could not install the Codex skill: ${error instanceof Error ? error.message : String(error)}`);
+        console.warn(`Could not install the learn skill: ${error instanceof Error ? error.message : String(error)}`);
     }
 }

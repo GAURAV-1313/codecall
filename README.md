@@ -1,9 +1,9 @@
 # learn
 
-`learn` is an agent-backed Codex skill that turns a completed implementation
-into a short, evidence-grounded, adaptive learning session. It uses the active
-coding agent that already understands the task and repository—there is no API
-key, additional model call, or external context upload.
+`learn` is an agent-backed skill for Codex and Claude Code that turns a
+completed implementation into a short, evidence-grounded, adaptive learning
+session. It uses the active coding agent that already understands the task and
+repository—there is no additional model call or external context upload.
 
 The MVP deliberately teaches and checks understanding one step at a time:
 
@@ -21,15 +21,16 @@ prerequisite-ready learning step.
 
 ## Install
 
-Install once from GitHub to add the `learn` skill to your local Codex skills
-directory:
+Install once from GitHub to add the same `learn` skill to both your local Codex
+and Claude Code skills directories:
 
 ```bash
 npm install -g https://github.com/GAURAV-1313/learn/archive/refs/heads/main.tar.gz
 ```
 
-Restart Codex or open a new task so it reloads the installed skill. This package
-does not require an API key, and its install step does not upload your code.
+Restart the relevant coding agent or open a new task so it reloads the installed
+skill. This package does not require an additional API key, and its install step
+does not upload your code.
 
 When the package is published to npm, the equivalent registry command will be:
 
@@ -57,13 +58,31 @@ relevant edge cases to check before applying the pattern in another project.
 
 The installable skill source is in [`skill/`](skill/SKILL.md).
 
+## Use it in Claude Code
+
+After Claude Code completes an implementation, invoke:
+
+```text
+/learn
+```
+
+Claude Code discovers personal skills from `~/.claude/skills/<skill-name>/SKILL.md`.
+The installer creates `~/.claude/skills/learn/SKILL.md`, using the same
+Agent-Skills-standard instruction file as Codex. It uses Claude Code's current
+conversation and edits—there is no extra learning-model API to configure.
+
+For a repository-level automatic, non-blocking recommendation, add the same
+rule below to `CLAUDE.md` rather than `AGENTS.md`.
+
 ### Automatic recommendation
 
-The skill can be selected implicitly by Codex, but skills are not background
-event listeners. `$learn` is the dependable trigger in any repository.
+Codex and Claude Code can select the skill implicitly, but skills are not
+background event listeners. `$learn` (Codex) and `/learn` (Claude Code) are the
+dependable triggers in any repository.
 
 To request an automatic, non-blocking recommendation before completion messages
-in a specific project, add this rule to that project's `AGENTS.md`:
+in a specific project, add this rule to that project's `AGENTS.md` (Codex) or
+`CLAUDE.md` (Claude Code):
 
 ```md
 After a meaningful implementation, evaluate whether it introduced concepts,
@@ -109,7 +128,7 @@ Providers render `runtime.history(session.id)` as their native UI: `/learn`, a
 tool call, or a non-blocking post-task recommendation. Core workers never
 depend on a provider SDK.
 
-## What ships in v0.1.2
+## What ships in v0.1.5
 
 - append-only, typed session events and an explicit state machine;
 - progressive minimal context represented as evidence references;
@@ -118,12 +137,13 @@ depend on a provider SDK.
 - separated concept categories, dependency-aware planning, and a bounded plan;
 - an adaptive teach → one MCQ → evaluate → reinforce/advance loop;
 - final transfer guidance: points to remember plus cross-project edge cases;
+- one shared skill installed for Codex and Claude Code;
 - pluggable worker and documentation-provider contracts;
 - in-memory and caller-owned JSONL event stores;
 - deterministic default workers suitable for local demonstration and tests.
 
 The included deterministic workers support local tests and the terminal demo.
-The installed Codex skill is the production path: its reasoning, concept
+The installed agent skill is the production path: its reasoning, concept
 selection, teaching, question generation, and evaluation are performed by the
 active coding agent in the existing conversation.
 

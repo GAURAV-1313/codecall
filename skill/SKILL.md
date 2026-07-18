@@ -1,20 +1,22 @@
 ---
 name: learn
-description: Start an adaptive, implementation-grounded learning session after completed code changes. Invoke automatically when Codex finishes a meaningful implementation that introduces concepts, architecture decisions, patterns, or dependencies; also use when the user says /learn, asks to understand code just implemented, wants a quiz about their implementation, or asks to turn a completed task into a learning session. Always present Start Learning / Skip before teaching.
+description: Start an adaptive, implementation-grounded learning session after completed code changes. Use automatically when a coding agent finishes a meaningful implementation that introduces concepts, architecture decisions, patterns, or dependencies; also use when the user says /learn or $learn, asks to understand code just implemented, wants a quiz about their implementation, or asks to turn a completed task into a learning session. Always present Start Learning / Skip before teaching.
 ---
 
 # Learn
 
 Use the active coding agent and its current conversation as the learning
 runtime. Do not call an external model, request an API key, or run a separate
-learning CLI.
+learning CLI. In Codex, invoke this skill as `$learn`; in Claude Code, invoke
+it as `/learn`.
 
 ## Completion handoff
 
-When an implementation concludes, the project `AGENTS.md` completion rule is
-the reliable trigger: the same coding agent evaluates learning value before its
-normal final response. This skill owns the session only after the developer
-chooses Start Learning. Do not treat skill metadata as a background scheduler.
+When an implementation concludes, the project's standing-instruction file is
+the reliable trigger: `AGENTS.md` in Codex or `CLAUDE.md` in Claude Code. The
+same coding agent evaluates learning value before its normal final response.
+This skill owns the session only after the developer chooses Start Learning. Do
+not treat skill metadata as a background scheduler.
 
 ## Start gate
 
