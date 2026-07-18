@@ -19,17 +19,17 @@ next prerequisite-ready learning step.
 
 ## Install
 
-Install once from GitHub to add the `learn` skill to your local Codex skills
-directory:
+Install once from the latest GitHub Release to add the `learn` skill to your
+local Codex skills directory:
 
 ```bash
-npm install -g git+https://github.com/GAURAV-1313/learn.git
+npm install -g https://github.com/GAURAV-1313/learn/releases/latest/download/learn.tgz
 ```
 
 Restart Codex or open a new task so it reloads the installed skill. This package
 does not require an API key, and its install step does not upload your code.
 
-After an npm release is published, the equivalent registry command will be:
+When the package is published to npm, the equivalent registry command will be:
 
 ```bash
 npm install -g @gaurav-1313/learn
