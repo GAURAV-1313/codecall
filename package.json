@@ -1,6 +1,6 @@
 {
   "name": "@gaurav-1313/learn",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "license": "MIT",
   "type": "module",
   "description": "Implementation-grounded adaptive learning skills for Codex and Claude Code.",

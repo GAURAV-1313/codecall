@@ -7,5 +7,6 @@ import { LearnRuntime } from "./runtime/orchestrator.js";
  */
 export declare function learn(implementation: ImplementationLocator): LearnRuntime;
 export * from "./schemas/types.js";
+export * from "./policy/opportunity.js";
 export * from "./runtime/orchestrator.js";
 export * from "./runtime/event-store.js";

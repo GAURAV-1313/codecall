@@ -34,6 +34,10 @@ export interface LearningOpportunity {
     estimatedMinutes: number;
     recommendation: "recommend" | "optional" | "skip";
     signals: Record<string, number>;
+    strongSignals: string[];
+    moderateSignals: string[];
+    excludedChangeCategories: string[];
+    conceptFingerprint: string;
     reasoning: string[];
 }
 export interface Concept {

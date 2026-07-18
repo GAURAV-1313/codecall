@@ -80,16 +80,26 @@ Codex and Claude Code can select the skill implicitly, but skills are not
 background event listeners. `$learn` (Codex) and `/learn` (Claude Code) are the
 dependable triggers in any repository.
 
-To request an automatic, non-blocking recommendation before completion messages
-in a specific project, add this rule to that project's `AGENTS.md` (Codex) or
-`CLAUDE.md` (Claude Code):
+The policy is intentionally selective: it recommends only when an implementation
+has one strong signal (for example a security boundary, integration, public
+contract, or architecture decision) or two moderate signals (such as a reusable
+pattern plus operational behavior). It skips cosmetic, documentation-only,
+mechanical, generated-only, dependency-only, and ordinary test-only work. The
+full policy is [installed with the skill](skill/references/trigger-policy.md).
+
+To enable it in a project, copy the [Codex template](skill/references/AGENTS.learn.md)
+into `AGENTS.md` or the [Claude Code template](skill/references/CLAUDE.learn.md)
+into `CLAUDE.md`:
 
 ```md
-After a meaningful implementation, evaluate whether it introduced concepts,
-patterns, dependencies, architecture decisions, or non-obvious tradeoffs. If
-so, present Start Learning / Skip before the normal final response. On Start,
-follow the learn skill; otherwise finish normally.
+Before the normal final response for a completed implementation, read the
+learn skill's references/trigger-policy.md and evaluate the change. Show Start
+Learning / Skip only for a `recommend` outcome; never teach without Start.
 ```
+
+The policy retains only an in-memory concept fingerprint for the current agent
+session, preventing duplicate cards without tracking learning across sessions
+or projects.
 
 ## Local demonstration runtime
 
@@ -128,7 +138,7 @@ Providers render `runtime.history(session.id)` as their native UI: `/learn`, a
 tool call, or a non-blocking post-task recommendation. Core workers never
 depend on a provider SDK.
 
-## What ships in v0.1.5
+## What ships in v0.1.6
 
 - append-only, typed session events and an explicit state machine;
 - progressive minimal context represented as evidence references;
@@ -138,6 +148,8 @@ depend on a provider SDK.
 - an adaptive teach → one MCQ → evaluate → reinforce/advance loop;
 - final transfer guidance: points to remember plus cross-project edge cases;
 - one shared skill installed for Codex and Claude Code;
+- an explainable strong/moderate auto-recommendation policy with session-local
+  duplicate suppression;
 - pluggable worker and documentation-provider contracts;
 - in-memory and caller-owned JSONL event stores;
 - deterministic default workers suitable for local demonstration and tests.

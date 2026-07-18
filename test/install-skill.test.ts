@@ -12,6 +12,7 @@ describe("skill installer", () => {
     expect(installed).toBe(join(root, "learn"));
     expect(existsSync(join(installed, "SKILL.md"))).toBe(true);
     expect(existsSync(join(installed, "agents", "openai.yaml"))).toBe(true);
+    expect(existsSync(join(installed, "references", "trigger-policy.md"))).toBe(true);
   });
 
   it("copies the same skill to a caller-selected Claude Code skill directory", () => {
@@ -20,5 +21,6 @@ describe("skill installer", () => {
 
     expect(installed).toBe(join(root, "learn"));
     expect(existsSync(join(installed, "SKILL.md"))).toBe(true);
+    expect(existsSync(join(installed, "references", "CLAUDE.learn.md"))).toBe(true);
   });
 });

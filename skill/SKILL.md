@@ -18,6 +18,18 @@ same coding agent evaluates learning value before its normal final response.
 This skill owns the session only after the developer chooses Start Learning. Do
 not treat skill metadata as a background scheduler.
 
+## Automatic recommendation policy
+
+Before deciding whether to show a post-implementation card, read
+[references/trigger-policy.md](references/trigger-policy.md). Apply it only to
+completed implementations with inspectable task, conversation, or changed-file
+evidence. A manual `$learn` or `/learn` request always starts this skill's
+normal Start/Skip flow regardless of the automatic policy.
+
+Use the matching standing-instruction template when configuring a project:
+[references/AGENTS.learn.md](references/AGENTS.learn.md) for Codex or
+[references/CLAUDE.learn.md](references/CLAUDE.learn.md) for Claude Code.
+
 ## Start gate
 
 1. Identify the completed implementation from the active conversation and the

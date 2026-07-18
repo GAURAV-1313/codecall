@@ -307,19 +307,30 @@ from collapsing into one ambiguous list.
 
 ## 10. Opportunity scoring and planning policy
 
-The detector uses a calibrated, explainable score rather than LOC or file
-count. Inputs are normalized 0–1 signals:
+The agent-backed product uses the shared skill policy as the authority; the
+deterministic runtime mirrors it for local demonstrations and parity tests. It
+does not infer learning value from LOC or file count.
 
-```text
-score = 0.24 novelty + 0.20 architectureImpact + 0.18 conceptDensity
-      + 0.15 dependencyDepth + 0.13 difficulty + 0.10 decisionSignificance
-```
+An implementation is eligible only after completion and with inspectable task,
+conversation, or changed-file evidence. It receives `recommend` when it has one
+strong signal or two distinct moderate signals. Strong signals are an external
+contract/integration, architecture or cross-component flow, a security or
+reliability boundary, or a consequential tradeoff. Moderate signals are a
+reusable pattern/lifecycle, a connected dependency relationship, or an
+operational configuration, observability, validation, test-strategy, or
+deployment change. One moderate signal is `optional`; no qualifying evidence is
+`skip`.
 
-`confidence` represents evidence quality, not user competence. Novelty can
-come from project-local conventions, explicit task language, new dependencies,
-or new cross-boundary behavior. The response includes every non-zero signal and
-the evidence backing it. Suggested policy: recommend at score >= 0.55 and
-confidence >= 0.65; label lower-confidence cases optional; skip otherwise.
+Formatting, copy, comments, mechanical renames, generated-only files, isolated
+dependency bumps, straightforward local fixes, and tests without a transferable
+strategy do not produce automatic cards. Every result records matched strong and
+moderate signals, excluded categories, an evidence-backed reason, and a stable
+concept fingerprint. A runtime-local set suppresses repeated evaluation of the
+same fingerprint; no learner history is persisted across sessions or projects.
+
+Only `recommend` renders a non-blocking Start/Skip card. `optional` and `skip`
+leave manual `/learn` or `$learn` available. No outcome starts teaching without
+developer consent.
 
 The planner removes duplicate concepts by canonical identity plus scope, merges
 closely related nodes into a unit only when their prerequisites and objective

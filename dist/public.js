@@ -19,5 +19,6 @@ export function learn(implementation) {
     }, new MemoryEventStore());
 }
 export * from "./schemas/types.js";
+export * from "./policy/opportunity.js";
 export * from "./runtime/orchestrator.js";
 export * from "./runtime/event-store.js";

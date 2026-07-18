@@ -6,6 +6,7 @@ export declare class DefaultContextCollector implements ContextCollector {
     collect(): Promise<ImplementationContext>;
 }
 export declare class HeuristicOpportunityDetector implements OpportunityDetector {
+    private readonly policy;
     detect(context: ImplementationContext): Promise<LearningOpportunity>;
 }
 export declare class HeuristicConceptExtractor implements ConceptExtractor {

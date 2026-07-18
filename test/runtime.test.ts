@@ -74,6 +74,16 @@ describe("learn runtime", () => {
     expect(runtime.history(session.id).map((event) => event.type)).not.toContain("LESSON_READY");
   });
 
+  it("suppresses a repeated concept cluster within one runtime session", async () => {
+    const runtime = learn(implementation);
+    const first = await runtime.start(implementation);
+    const second = await runtime.start(implementation);
+
+    expect(first.opportunity?.recommendation).toBe("recommend");
+    expect(second.opportunity?.recommendation).toBe("skip");
+    expect(second.opportunity?.excludedChangeCategories).toContain("already_evaluated_in_session");
+  });
+
   it("keeps event logs in a caller-selected JSONL file", () => {
     const filePath = join(mkdtempSync(join(tmpdir(), "learn-events-")), "events.jsonl");
     const store = new JsonlEventStore(filePath);
