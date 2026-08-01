@@ -215,5 +215,26 @@ After updating the Claude marketplace plugin, users refresh it with
 the configured marketplace with `codex plugin marketplace upgrade codecall` and
 reinstall `codecall@codecall` if needed.
 
+### Getting listed in curated marketplaces
+
+The Install section above works today via `marketplace add <this-repo-url>`,
+but `codecall` is not yet listed in either agent's built-in, searchable
+directory. Listing there is a separate, manual submission to each vendor:
+
+**Claude Code** — submit via the
+[Plugin Directory Submission Form](https://clau.de/plugin-directory-submission)
+for inclusion in `claude-plugins-official` or the community-reviewed
+`claude-community` marketplace. The repo already satisfies the required
+structure (`plugins/codecall/.claude-plugin/plugin.json`, README, homepage).
+Note the plugin `name` becomes immutable once accepted.
+
+**Codex** — submit through the OpenAI Platform plugin portal at
+`platform.openai.com/plugins`, which requires an org with "Apps Management:
+Write" permission and a verified identity. Since `codecall` has no MCP
+server, this is a skills-only submission: listing copy, support/privacy/terms
+URLs, and a minimum of five positive and three negative test cases (prompt,
+expected behavior, result shape). Review is asynchronous with no guaranteed
+timeline.
+
 See [ARCHITECTURE.md](ARCHITECTURE.md) for the full design, privacy posture,
 event model, state machine, and planned provider integrations.
