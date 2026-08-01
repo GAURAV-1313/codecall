@@ -1,0 +1,23 @@
+{
+  "name": "codecall",
+  "version": "1.1.0",
+  "description": "Adaptive implementation-grounded learning for Codex.",
+  "author": {
+    "name": "Gaurav",
+    "url": "https://github.com/GAURAV-1313"
+  },
+  "homepage": "https://www.npmjs.com/package/codecall",
+  "repository": "https://github.com/GAURAV-1313/codecall",
+  "license": "MIT",
+  "keywords": ["codex", "claude-code", "learning", "developer-education"],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Codecall",
+    "shortDescription": "Learn from the implementation you just completed.",
+    "longDescription": "A consent-first, adaptive learning skill grounded in completed implementation work.",
+    "developerName": "Gaurav",
+    "category": "Productivity",
+    "capabilities": ["Interactive"],
+    "defaultPrompt": ["Teach me the implementation I just completed with Codecall."]
+  }
+}

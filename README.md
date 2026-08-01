@@ -21,24 +21,45 @@ prerequisite-ready learning step.
 
 ## Install
 
-Install once from npm to add the same `codecall` skill to both your local Codex
-and Claude Code skills directories:
+Codecall is available as a Codex plugin, a Claude Code plugin, or an npm
+standalone skill. Every option is local, requires no API key, and does not
+upload your code.
+
+### Codex plugin
+
+```bash
+codex plugin marketplace add https://github.com/GAURAV-1313/codecall
+codex plugin add codecall@codecall
+```
+
+Restart Codex or open a new task, then invoke `$codecall`.
+
+### Claude Code plugin
+
+```text
+/plugin marketplace add https://github.com/GAURAV-1313/codecall
+/plugin install codecall@codecall
+/reload-plugins
+```
+
+The Claude marketplace plugin command is namespaced: `/codecall:codecall`.
+
+### npm standalone skill
 
 ```bash
 npm install -g codecall
-codecall install
 ```
 
-Restart the relevant coding agent or open a new task so it reloads the installed
-skill. This package does not require an additional API key, and its install step
-does not upload your code.
+The global install automatically copies the standalone skill to both
+`~/.codex/skills/codecall/` and `~/.claude/skills/codecall/`. Restart the
+relevant coding agent or open a new task to reload it. The standalone Claude
+skill keeps the short `/codecall` command.
 
-The current release is [`codecall@1.0.0`](https://www.npmjs.com/package/codecall).
+The current release is [`codecall@1.1.0`](https://www.npmjs.com/package/codecall).
 To update a previous global installation:
 
 ```bash
 npm update -g codecall
-codecall install
 ```
 
 ## Use it in Codex
@@ -59,28 +80,31 @@ with concepts covered, weak areas, and an estimated session mastery. The final
 summary also gives implementation-grounded points to remember and only the
 relevant edge cases to check before applying the pattern in another project.
 
-The installable skill source is in [`skill/`](skill/SKILL.md).
+The shared plugin source is in [`plugins/codecall/`](plugins/codecall/skills/codecall/SKILL.md).
 
 ## Use it in Claude Code
 
-After Claude Code completes an implementation, invoke:
+After Claude Code completes an implementation through the marketplace plugin,
+invoke:
 
 ```text
-/codecall
+/codecall:codecall
 ```
 
-Claude Code discovers personal skills from `~/.claude/skills/<skill-name>/SKILL.md`.
-The installer creates `~/.claude/skills/codecall/SKILL.md`, using the same
-Agent-Skills-standard instruction file as Codex. It uses Claude Code's current
-conversation and edits—there is no extra learning-model API to configure.
+Claude Code namespaces marketplace skills to avoid conflicts between plugins.
+If Codecall was installed globally from npm instead, invoke `/codecall` from
+`~/.claude/skills/codecall/SKILL.md`. Both paths use the same Agent-Skills-
+standard instruction file and current conversation—there is no extra
+learning-model API to configure.
 
 For a repository-level automatic, non-blocking recommendation, add the same
 rule below to `CLAUDE.md` rather than `AGENTS.md`.
 
 ### Automatic recommendation
 
-Codex and Claude Code can select the skill implicitly, but skills are not
-background event listeners. `$codecall` (Codex) and `/codecall` (Claude Code) are the
+Codex and Claude Code can select the skill implicitly, but plugins and skills
+are not background event listeners. `$codecall` (Codex), `/codecall:codecall`
+(Claude marketplace), and `/codecall` (npm standalone Claude install) are the
 dependable triggers in any repository.
 
 The policy is intentionally selective: it recommends only when an implementation
@@ -88,10 +112,10 @@ has one strong signal (for example a security boundary, integration, public
 contract, or architecture decision) or two moderate signals (such as a reusable
 pattern plus operational behavior). It skips cosmetic, documentation-only,
 mechanical, generated-only, dependency-only, and ordinary test-only work. The
-full policy is [installed with the skill](skill/references/trigger-policy.md).
+full policy is [installed with the plugin](plugins/codecall/skills/codecall/references/trigger-policy.md).
 
-To enable it in a project, copy the [Codex template](skill/references/AGENTS.codecall.md)
-into `AGENTS.md` or the [Claude Code template](skill/references/CLAUDE.codecall.md)
+To enable it in a project, copy the [Codex template](plugins/codecall/skills/codecall/references/AGENTS.codecall.md)
+into `AGENTS.md` or the [Claude Code template](plugins/codecall/skills/codecall/references/CLAUDE.codecall.md)
 into `CLAUDE.md`:
 
 ```md
@@ -141,7 +165,7 @@ Providers render `runtime.history(session.id)` as their native UI: `/codecall`, 
 tool call, or a non-blocking post-task recommendation. Core workers never
 depend on a provider SDK.
 
-## What ships in v1.0.0
+## What ships in v1.1.0
 
 - append-only, typed session events and an explicit state machine;
 - progressive minimal context represented as evidence references;
@@ -151,6 +175,7 @@ depend on a provider SDK.
 - an adaptive teach → one MCQ → evaluate → reinforce/advance loop;
 - final transfer guidance: points to remember plus cross-project edge cases;
 - one shared skill installed for Codex and Claude Code;
+- Codex and Claude Code marketplace plugins backed by the same shared source;
 - an explainable strong/moderate auto-recommendation policy with session-local
   duplicate suppression;
 - pluggable worker and documentation-provider contracts;
@@ -169,6 +194,20 @@ npm install
 npm run build
 npm test
 ```
+
+### Plugin development
+
+The canonical plugin lives in `plugins/codecall/`. Validate it before release:
+
+```bash
+python3 /Users/gaurav/.codex/skills/.system/plugin-creator/scripts/validate_plugin.py plugins/codecall
+claude plugin validate ./plugins/codecall
+```
+
+After updating the Claude marketplace plugin, users refresh it with
+`/plugin marketplace update codecall` and `/reload-plugins`. Codex users refresh
+the configured marketplace with `codex plugin marketplace upgrade codecall` and
+reinstall `codecall@codecall` if needed.
 
 See [ARCHITECTURE.md](ARCHITECTURE.md) for the full design, privacy posture,
 event model, state machine, and planned provider integrations.

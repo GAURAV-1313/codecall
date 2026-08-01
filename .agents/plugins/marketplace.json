@@ -1,0 +1,20 @@
+{
+  "name": "codecall",
+  "interface": {
+    "displayName": "Codecall plugins"
+  },
+  "plugins": [
+    {
+      "name": "codecall",
+      "source": {
+        "source": "local",
+        "path": "./plugins/codecall"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Productivity"
+    }
+  ]
+}

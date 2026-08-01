@@ -7,8 +7,9 @@ description: Start an adaptive, implementation-grounded learning session after c
 
 Use the active coding agent and its current conversation as the learning
 runtime. Do not call an external model, request an API key, or run a separate
-learning CLI. In Codex, invoke this skill as `$codecall`; in Claude Code, invoke
-it as `/codecall`.
+learning CLI. In Codex, invoke this skill as `$codecall`. In the Claude Code
+marketplace plugin, invoke it as `/codecall:codecall`; the npm standalone
+installer keeps `/codecall` available.
 
 ## Completion handoff
 
@@ -23,8 +24,9 @@ not treat skill metadata as a background scheduler.
 Before deciding whether to show a post-implementation card, read
 [references/trigger-policy.md](references/trigger-policy.md). Apply it only to
 completed implementations with inspectable task, conversation, or changed-file
-evidence. A manual `$codecall` or `/codecall` request always starts this skill's
-normal Start/Skip flow regardless of the automatic policy.
+evidence. A manual `$codecall`, `/codecall:codecall`, or standalone `/codecall`
+request always starts this skill's normal Start/Skip flow regardless of the
+automatic policy.
 
 Use the matching standing-instruction template when configuring a project:
 [references/AGENTS.codecall.md](references/AGENTS.codecall.md) for Codex or

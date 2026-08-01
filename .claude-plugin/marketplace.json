@@ -1,0 +1,18 @@
+{
+  "name": "codecall",
+  "owner": {
+    "name": "Gaurav",
+    "url": "https://github.com/GAURAV-1313"
+  },
+  "plugins": [
+    {
+      "name": "codecall",
+      "source": "./plugins/codecall",
+      "description": "Adaptive implementation-grounded learning for Claude Code.",
+      "version": "1.1.0",
+      "author": {
+        "name": "Gaurav"
+      }
+    }
+  ]
+}

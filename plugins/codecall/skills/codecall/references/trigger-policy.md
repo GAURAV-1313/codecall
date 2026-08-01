@@ -35,7 +35,8 @@ localized fixes. Skip test-only work unless it introduces a transferable test
 strategy, harness, boundary, or behavior.
 
 - `recommend`: show Start Learning / Skip and wait for consent.
-- `optional`: do not interrupt; leave `$codecall` and `/codecall` available.
+- `optional`: do not interrupt; leave `$codecall`, `/codecall:codecall`, and
+  standalone `/codecall` available.
 - `skip`: do nothing automatically.
 
 Manual invocation always remains available. Never request an API key or invoke

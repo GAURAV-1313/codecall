@@ -1,0 +1,13 @@
+{
+  "name": "codecall",
+  "version": "1.1.0",
+  "description": "Adaptive implementation-grounded learning for Claude Code.",
+  "author": {
+    "name": "Gaurav",
+    "url": "https://github.com/GAURAV-1313"
+  },
+  "homepage": "https://www.npmjs.com/package/codecall",
+  "repository": "https://github.com/GAURAV-1313/codecall",
+  "license": "MIT",
+  "keywords": ["learning", "developer-education", "implementation"]
+}

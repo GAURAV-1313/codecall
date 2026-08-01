@@ -4,7 +4,7 @@ import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 function packagedSkillSource() {
     const here = dirname(fileURLToPath(import.meta.url));
-    return join(here, "..", "skill");
+    return join(here, "..", "plugins", "codecall", "skills", "codecall");
 }
 function copySkill(destinationRoot) {
     const source = packagedSkillSource();
