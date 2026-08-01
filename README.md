@@ -25,6 +25,12 @@ Codecall is available as a Codex plugin, a Claude Code plugin, or an npm
 standalone skill. Every option is local, requires no API key, and does not
 upload your code.
 
+The Codex and Claude Code plugins are distributed from this GitHub repository,
+not a curated in-app marketplace—`codecall` will not show up if you browse or
+search either agent's built-in plugin list. You must add this repository as a
+marketplace source first (the commands below), after which the plugin
+installs and appears normally.
+
 ### Codex plugin
 
 ```bash
