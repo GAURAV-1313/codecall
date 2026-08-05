@@ -1,0 +1,16 @@
+{
+  "description": "Deterministically re-checks trigger-policy.md before the agent's final response, instead of relying solely on AGENTS.md/CLAUDE.md prose.",
+  "hooks": {
+    "Stop": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"${CLAUDE_PLUGIN_ROOT}/hooks/stop.mjs\""
+          }
+        ]
+      }
+    ]
+  }
+}

@@ -1,6 +1,6 @@
 ---
 name: codecall
-description: Start an adaptive, implementation-grounded learning session after completed code changes. Use automatically when a coding agent finishes a meaningful implementation that introduces concepts, architecture decisions, patterns, or dependencies; also use when the user says /codecall or $codecall, asks to understand code just implemented, wants a quiz about their implementation, or asks to turn a completed task into a learning session. Always present Start Learning / Skip before teaching.
+description: "Post-implementation teach+quiz skill. Fires on implementation done, /codecall, $codecall, quiz-me, or explain-what-I-built requests. Gate: Start Learning/Skip first, always. No auto-teach."
 ---
 
 # Codecall
@@ -14,7 +14,12 @@ installer keeps `/codecall` available.
 ## Completion handoff
 
 When an implementation concludes, the project's standing-instruction file is
-the reliable trigger: `AGENTS.md` in Codex or `CLAUDE.md` in Claude Code. The
+the reliable trigger for the npm standalone install: `AGENTS.md` in Codex or
+`CLAUDE.md` in Claude Code. On the Claude Code and Codex marketplace plugin
+installs, a bundled Stop hook also deterministically re-surfaces this check
+before the final response, as a backstop to that same prose instruction — the
+hook only forces the check to happen; it never makes the recommend/optional/skip
+judgment itself, which stays a model decision driven by trigger-policy.md. The
 same coding agent evaluates learning value before its normal final response.
 This skill owns the session only after the developer chooses Start Learning. Do
 not treat skill metadata as a background scheduler.
@@ -37,14 +42,23 @@ Use the matching standing-instruction template when configuring a project:
 1. Identify the completed implementation from the active conversation and the
    coding agent's recent edits. If it is not clear, ask for a short description
    before inspecting code.
-2. Read context progressively: task/conversation and known edited files first;
-   then focused excerpts needed to explain a dependency or decision. Use a Git
-   diff only when it is available and helpful—never require Git changes, a Git
-   repository, or an uncommitted working tree. Never scan the entire repository
-   by default.
-3. Detect learning value from novelty, architecture impact, concept density,
-   dependency depth, difficulty, and meaningful decisions—not LOC or file count.
-4. Present this non-blocking prompt and wait:
+2. Gather evidence and judge learning value:
+   - **Claude Code marketplace plugin:** delegate this step to the
+     `codecall-planner` subagent via `@codecall:codecall-planner`, passing the
+     implementation description and known changed files as its task prompt.
+     Use its returned judgment, reason, minutes estimate, and concept plan for
+     the rest of this session. This keeps the read-heavy context-gathering work
+     out of the main conversation's context window.
+   - **Codex, npm standalone, or whenever that subagent is unavailable:**
+     perform this in the current conversation instead. Read context
+     progressively: task/conversation and known edited files first, then
+     focused excerpts needed to explain a dependency or decision. Use a Git
+     diff only when it is available and helpful—never require Git changes, a
+     Git repository, or an uncommitted working tree. Never scan the entire
+     repository by default. Judge learning value from novelty, architecture
+     impact, concept density, dependency depth, difficulty, and meaningful
+     decisions—not LOC or file count.
+3. Present this non-blocking prompt and wait:
 
    ```text
    Implementation completed.
@@ -58,8 +72,9 @@ If the developer skips or cancels, stop without teaching.
 
 ## Adaptive session
 
-1. Build a small dependency-aware learning path of 2–4 concepts when the
-   implementation has enough material. Keep technologies, concepts, patterns,
+1. Use the plan `codecall-planner` returned, if the Start gate delegated to it.
+   Otherwise, build a small dependency-aware learning path of 2–4 concepts when
+   the implementation has enough material. Keep technologies, concepts, patterns,
    anti-patterns, architecture decisions, and misconceptions distinct. Do not
    reduce a multi-concept implementation to one vocabulary question.
 2. Ask confidence for the first prerequisite-ready concept: Expert, Comfortable,

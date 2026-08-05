@@ -100,6 +100,12 @@ This installs it for both Codex and Claude Code at once. In Codex, type
 > **Note:** codecall isn't in the searchable plugin list inside Codex or
 > Claude Code yet — you have to install it with the command above, once.
 > After that it works normally every time.
+>
+> **Note:** the plugin install (not the `npm install -g` path) includes a
+> small local script that reminds the agent to check whether a session is
+> worth offering, so you may see a one-time "this plugin can run code"
+> review prompt during setup. It makes no network calls — see
+> [Privacy](#privacy--the-short-version).
 
 ### How do I know it worked?
 
@@ -133,10 +139,16 @@ A typical session covers 2–4 ideas and takes just a few minutes.
 
 ## Want it to offer to teach you automatically?
 
-By default, you have to type the command yourself. If you'd rather have it
-*offer* to teach you right after finishing meaningful work (still asking
-Start/Skip first — it never teaches without your OK), copy one small file
-into your project:
+If you installed the **Codex or Claude Code plugin**, this mostly just
+works already: a small local check runs after each turn and reminds the
+agent to consider offering codecall when something meaningful just
+happened — it never decides *for* you, it just makes sure the agent
+actually checks. (Only the plugin install gets this; `npm install -g`
+doesn't, since it isn't a plugin.)
+
+Either way, for the strongest guarantee — and the only option for the
+`npm install -g` path — copy one small file into your project so the agent's
+own instructions always include this check:
 
 - **Codex:** copy [this file](plugins/codecall/skills/codecall/references/AGENTS.codecall.md)
   into your project's `AGENTS.md`.
@@ -145,7 +157,8 @@ into your project:
 
 It's selective on purpose — it only offers after real, meaningful changes
 (like a new integration, a security-related change, or an architecture
-decision), never for typo fixes, formatting, or routine changes.
+decision), never for typo fixes, formatting, or routine changes. And it
+never teaches without you choosing Start Learning first, automatic or not.
 
 ## Privacy — the short version
 
@@ -154,6 +167,13 @@ decision), never for typo fixes, formatting, or routine changes.
   already have open — there's no separate model call.
 - It doesn't remember anything between sessions or projects. It only avoids
   repeating the same suggestion twice in one sitting.
+- The plugin install's automatic-check script runs entirely on your machine,
+  makes no network calls, and only ever adds a text reminder — it can't edit
+  files or run other commands on its own.
+- On the Claude Code plugin, some of the read-only "figure out if this is
+  worth teaching" work runs in an isolated helper (so it doesn't clutter your
+  main conversation) — it can only read files, never edit them, and it never
+  talks to you directly or teaches anything itself.
 
 ## Troubleshooting
 
@@ -168,6 +188,18 @@ if you installed the plugin, or plain `/codecall` if you used `npm install -g co
 new task — an already-open session won't see a fresh install.
 
 **Does it ever send my code anywhere?** No — see Privacy above.
+
+**Why did installing the plugin ask me to review/trust something?** That's
+the one-time review for the small local script that powers the "offer to
+teach automatically" feature above. It's normal, runs locally, and you can
+still decline it — codecall still works, you'll just need to type the
+command yourself instead of being offered it.
+
+**What's the "helper" mentioned in Privacy — is that someone else reading my
+code?** No — it's the same AI tool you're already using, just working in an
+isolated scratch space so figuring out what's worth teaching doesn't fill up
+your main conversation. You won't see it unless you go looking; it only
+hands back a short plan.
 
 ## For developers
 
