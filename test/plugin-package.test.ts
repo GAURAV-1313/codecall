@@ -34,8 +34,8 @@ describe("plugin package", () => {
     const claude = json(join(pluginRoot, ".claude-plugin", "plugin.json"));
     expect(codex.name).toBe("codecall");
     expect(claude.name).toBe("codecall");
-    expect(codex.version).toBe("1.1.0");
-    expect(claude.version).toBe("1.1.0");
+    expect(codex.version).toBe("1.2.0");
+    expect(claude.version).toBe("1.2.0");
     expect(codex).not.toHaveProperty("hooks");
     expect(codex).not.toHaveProperty("mcpServers");
     expect(claude).not.toHaveProperty("hooks");
@@ -54,13 +54,13 @@ describe("plugin package", () => {
     expect((codexPlugin.source as Record<string, unknown>).path).toBe("./plugins/codecall");
     expect(claudePlugin.name).toBe("codecall");
     expect(claudePlugin.source).toBe("./plugins/codecall");
-    expect(claudePlugin.version).toBe("1.1.0");
+    expect(claudePlugin.version).toBe("1.2.0");
   });
 
   it("includes the canonical plugin in the npm package definition", () => {
     const packageJson = json(join(root, "package.json"));
     expect(packageJson.name).toBe("codecall");
-    expect(packageJson.version).toBe("1.1.0");
+    expect(packageJson.version).toBe("1.2.0");
     expect(packageJson.files).toContain("plugins/codecall");
     expect(packageJson.files).not.toContain("skill");
   });
