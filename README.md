@@ -1,60 +1,84 @@
 # codecall
 
-`codecall` is an agent-backed skill for Codex and Claude Code that turns a
-completed implementation into a short, evidence-grounded, adaptive learning
-session. It uses the active coding agent that already understands the task and
-repository—there is no additional model call, no API key, and no code upload
-to any external service.
+**codecall teaches you the code you just wrote.**
 
-The MVP deliberately teaches and checks understanding one step at a time:
+After you (or your AI coding assistant) finish building something, codecall
+turns that work into a quick, friendly quiz — so you actually understand what
+was built, not just that it works. It runs inside Codex or Claude Code, the
+AI coding tools you already use. No extra app, no signup, no API key.
+
+**Why use it?** It's easy to accept code from an AI assistant without fully
+understanding it. codecall closes that gap: right after something is built,
+it teaches you the 2–4 key ideas behind it, asks a couple of simple questions
+to check your understanding, and tells you what to double check before you
+reuse the same pattern elsewhere.
+
+You're always in control — it only starts when you say "yes," and you can
+skip it every time if you want.
+
+### What it looks like
+
+Say your AI assistant just added login to your app. You type `$codecall` (or
+`/codecall`), and this happens:
 
 ```text
-collect minimal context → recommend → confidence → lesson → one check-in
-                                              ↑                 ↓
-                                              └── reinforce / advance
+You: $codecall
+
+codecall: Implementation completed.
+          Learning opportunity: this adds authentication middleware and a
+          new security boundary.
+          Estimated learning time: 4 minutes
+
+          Start Learning / Skip
+
+You: Start Learning
+
+codecall: How confident are you with authentication middleware?
+          [ Expert / Comfortable / Heard of it / Never learned ]
+
+You: Heard of it
+
+codecall: Let's start with why every request now passes through a check
+          before reaching your account routes...
+          (explains the concept in plain terms, using YOUR actual code)
+
+          Quick check: if someone sends a request without logging in,
+          what should happen?
+          [ multiple-choice answer ]
+
+You: (pick an answer)
+
+codecall: (tells you if you're right, and why — then moves to the next idea)
+
+...
+
+codecall: Session complete.
+          You learned: authentication middleware, token verification.
+          Remember: always check the token before touching user data.
+          Watch out for: forgetting this check on a new route you add later.
 ```
 
-It does not throw a fixed quiz at the user. A normal session covers 2–4 related
-concepts, using two checks per concept: a real-world-to-technical mapping and a
-technical application or tradeoff question. A wrong answer produces targeted
-reinforcement and a fresh equivalent check-in; correct answers unlock the next
-prerequisite-ready learning step.
+That's the whole product — a short, focused conversation about the code that
+was just written, grounded in what actually happened, not a generic
+tutorial.
 
 ## Requirements
 
-- **Codex or Claude Code**, installed and working. `codecall` is a skill that
-  runs inside one of these agents—it is not a standalone chatbot.
-- **Node.js 20+**, but only if you use the npm standalone install path or the
-  local deterministic CLI demo below. The Codex and Claude Code plugin paths
-  need no Node.js on your machine.
-- No API key, no account, no signup, and no network access at any point.
+- Codex or Claude Code, already installed.
+- No account, no signup, no API key, no internet access needed.
 
-## Quickstart
+## Install it (pick one)
 
-Pick exactly one install path. All three end up invoking the same skill.
-
-| You use | Install | Invoke |
-| --- | --- | --- |
-| Codex | [Codex plugin](#codex-plugin) | `$codecall` |
-| Claude Code | [Claude Code plugin](#claude-code-plugin) | `/codecall:codecall` |
-| Either, without a plugin marketplace | [npm standalone](#npm-standalone-skill) | `$codecall` (Codex) or `/codecall` (Claude) |
-
-`codecall` is not yet listed in either agent's built-in, searchable plugin
-directory—see [Getting listed in curated marketplaces](#getting-listed-in-curated-marketplaces).
-Until then, every install path below requires running the exact command shown
-once; browsing or searching inside Codex/Claude Code will not surface it.
-
-### Codex plugin
+### If you use Codex
 
 ```bash
 codex plugin marketplace add https://github.com/GAURAV-1313/codecall
 codex plugin add codecall@codecall
 ```
 
-You should see `Added plugin `codecall` from marketplace `codecall`.`. Restart
-Codex or open a new task, then invoke `$codecall`.
+Then restart Codex (or start a new task) and type `$codecall`.
 
-### Claude Code plugin
+### If you use Claude Code
 
 ```text
 /plugin marketplace add https://github.com/GAURAV-1313/codecall
@@ -62,190 +86,93 @@ Codex or open a new task, then invoke `$codecall`.
 /reload-plugins
 ```
 
-You should see `Successfully installed plugin: codecall@codecall`. The
-marketplace plugin command is namespaced: `/codecall:codecall`.
+Then type `/codecall:codecall`.
 
-### npm standalone skill
+### Either tool, the simple way (no plugin store)
 
 ```bash
 npm install -g codecall
 ```
 
-The global install automatically copies the shared skill to both
-`~/.codex/skills/codecall/` and `~/.claude/skills/codecall/`. Restart the
-relevant coding agent or open a new task to reload it. The standalone Claude
-skill keeps the short `/codecall` command instead of the namespaced one.
+This installs it for both Codex and Claude Code at once. In Codex, type
+`$codecall`. In Claude Code, type `/codecall`.
 
-The current release is [`codecall@1.1.0`](https://www.npmjs.com/package/codecall).
-To update a previous global installation:
+> **Note:** codecall isn't in the searchable plugin list inside Codex or
+> Claude Code yet — you have to install it with the command above, once.
+> After that it works normally every time.
 
-```bash
-npm update -g codecall
-```
+### How do I know it worked?
 
-### Verify it worked
-
-Invoke the command for your install path (`$codecall`, `/codecall:codecall`,
-or `/codecall`) inside a project where you've just finished some work. You
-should see a short, non-blocking prompt like:
+Type the command for whichever way you installed it. You should see
+something like this:
 
 ```text
 Implementation completed.
-Learning opportunity: <implementation-specific reason>
-Estimated learning time: <N> minutes
+Learning opportunity: <a short reason>
+Estimated learning time: <a few minutes>
 
 Start Learning / Skip
 ```
 
-If nothing happens, see [Troubleshooting](#troubleshooting) below.
+If you see that, it's working. If nothing happens, try restarting Codex or
+Claude Code — a session that was already open won't pick up a fresh install.
 
-## Using it day to day
+## How to use it
 
-After Codex or Claude Code completes an implementation, invoke the command for
-your install path. The skill uses the existing conversation and the coding
-agent's recent edits—it does not require a Git repository, a diff, or any
-uncommitted changes; Git is only used opportunistically when present.
+1. Finish some work with Codex or Claude Code, like normal.
+2. Type the command for your install (`$codecall` or `/codecall`).
+3. It asks: **Start Learning or Skip?** Nothing happens until you choose.
+4. If you start: it asks how confident you already are, then teaches one idea
+   at a time — what it is, why the code needed it, and what breaks without
+   it — followed by a quick question to check your understanding.
+5. At the end, you get a short summary: what you learned, what to remember,
+   and any gotchas to watch for if you reuse the same pattern in another
+   project.
 
-It first presents a Start/Skip recommendation. After Start, it asks your
-confidence (`expert`, `comfortable`, `heard_of_it`, `never_learned`), then
-teaches one implementation-specific concept and asks one reasoning question at
-a time. Your answer determines whether it reinforces, deepens, or advances. It
-finishes with concepts covered, weak areas, and an estimated session mastery,
-plus implementation-grounded points to remember and only the relevant edge
-cases to check before applying the pattern in another project.
+A typical session covers 2–4 ideas and takes just a few minutes.
 
-The shared skill source—what actually runs during a session—is in
-[`plugins/codecall/skills/codecall/SKILL.md`](plugins/codecall/skills/codecall/SKILL.md).
+## Want it to offer to teach you automatically?
 
-## Turning on automatic recommendations (optional)
+By default, you have to type the command yourself. If you'd rather have it
+*offer* to teach you right after finishing meaningful work (still asking
+Start/Skip first — it never teaches without your OK), copy one small file
+into your project:
 
-By default you invoke `codecall` manually after finishing work. To have Codex
-or Claude Code *offer* the Start/Skip prompt on its own after a meaningful
-implementation, copy the matching template into your project:
+- **Codex:** copy [this file](plugins/codecall/skills/codecall/references/AGENTS.codecall.md)
+  into your project's `AGENTS.md`.
+- **Claude Code:** copy [this file](plugins/codecall/skills/codecall/references/CLAUDE.codecall.md)
+  into your project's `CLAUDE.md`.
 
-- Codex: copy [`references/AGENTS.codecall.md`](plugins/codecall/skills/codecall/references/AGENTS.codecall.md)
-  into `AGENTS.md`.
-- Claude Code: copy [`references/CLAUDE.codecall.md`](plugins/codecall/skills/codecall/references/CLAUDE.codecall.md)
-  into `CLAUDE.md`.
+It's selective on purpose — it only offers after real, meaningful changes
+(like a new integration, a security-related change, or an architecture
+decision), never for typo fixes, formatting, or routine changes.
 
-Both templates reduce to this rule:
+## Privacy — the short version
 
-```md
-Before the normal final response for a completed implementation, read the
-codecall skill's references/trigger-policy.md and evaluate the change. Show Start
-Learning / Skip only for a `recommend` outcome; never teach without Start.
-```
-
-The policy is intentionally selective: it recommends only when an implementation
-has one strong signal (for example a security boundary, integration, public
-contract, or architecture decision) or two moderate signals (such as a reusable
-pattern plus operational behavior). It skips cosmetic, documentation-only,
-mechanical, generated-only, dependency-only, and ordinary test-only work—see
-the full policy in
-[`references/trigger-policy.md`](plugins/codecall/skills/codecall/references/trigger-policy.md).
-A runtime-local fingerprint prevents showing the same card twice in one agent
-session; nothing is persisted across sessions or projects. Manual invocation
-(`$codecall`, `/codecall:codecall`, or `/codecall`) always stays available
-regardless of this policy.
-
-## Privacy
-
-- No API key, account, or signup at any step.
-- No external model call and no code upload: the session runs entirely inside
-  the coding agent (Codex or Claude Code) you already have open, using the
-  conversation and files it already has access to.
-- No cross-session or cross-project learner history is kept. The only state is
-  an in-memory concept fingerprint for the current agent session, used solely
-  to avoid showing a duplicate recommendation card.
-- Git is read opportunistically when useful and is never required.
-
-## Local deterministic CLI (optional demo, not the product path)
-
-```bash
-npm install -g codecall
-codecall --task "Add OAuth protected routes" --from-git
-```
-
-This is a local, deterministic, offline demonstration runtime with fixed
-example workers—useful for trying the session flow without an agent attached,
-or for tests. It is **not** the agent-backed product experience: use
-`$codecall`, `/codecall:codecall`, or `/codecall` for that. Run `codecall --help`
-for the full option list (currently `--task`, `--from-git`, `--help`/`-h`).
-
-## Use it programmatically
-
-```ts
-import { codecall } from "codecall";
-
-const implementation = {
-  task: "Protect account routes using JWT authentication middleware.",
-  changedFiles: [{
-    path: "src/routes.ts",
-    summary: "Adds authentication middleware before account handlers."
-  }]
-};
-
-const runtime = codecall(implementation);
-const session = await runtime.start(implementation);
-
-runtime.decide(session, true);                 // developer chose Start Learning
-await runtime.setConfidence(session, "heard_of_it");
-
-// Render session.currentQuestion. On a user answer:
-await runtime.answer(session, "causal");
-```
-
-Providers render `runtime.history(session.id)` as their native UI: `/codecall`, a
-tool call, or a non-blocking post-task recommendation. Core workers never
-depend on a provider SDK.
-
-## What ships in v1.1.0
-
-- append-only, typed session events and an explicit state machine;
-- progressive minimal context represented as evidence references;
-- explainable opportunity scoring based on concepts and architecture signals,
-  not LOC;
-- separated concept categories, dependency-aware planning, and a bounded plan;
-- an adaptive teach → one MCQ → evaluate → reinforce/advance loop;
-- final transfer guidance: points to remember plus cross-project edge cases;
-- one shared skill installed for Codex and Claude Code;
-- Codex and Claude Code marketplace plugins backed by the same shared source;
-- an explainable strong/moderate auto-recommendation policy with session-local
-  duplicate suppression;
-- pluggable worker and documentation-provider contracts;
-- in-memory and caller-owned JSONL event stores;
-- deterministic default workers suitable for local demonstration and tests.
-
-The included deterministic workers support local tests and the terminal demo.
-The installed agent skill is the production path: its reasoning, concept
-selection, teaching, question generation, and evaluation are performed by the
-active coding agent in the existing conversation.
+- No API key, no account, no signup.
+- Nothing is uploaded anywhere. It uses the same AI tool and conversation you
+  already have open — there's no separate model call.
+- It doesn't remember anything between sessions or projects. It only avoids
+  repeating the same suggestion twice in one sitting.
 
 ## Troubleshooting
 
-**`codecall` doesn't show up when I search or browse plugins in Codex/Claude
-Code.** Expected—it isn't in either agent's curated/searchable directory yet
-(see below). Install it with the exact `marketplace add <url>` command from
-the Quickstart above; after that it works normally.
+**I can't find it when I search inside Codex or Claude Code's plugin list.**
+That's expected for now — install it with the command above instead of
+searching for it. Once installed, it works like any other plugin.
 
-**Which command do I type—`$codecall`, `/codecall:codecall`, or `/codecall`?**
-It depends on how you installed it: `$codecall` for Codex (either install
-path), `/codecall:codecall` for the Claude Code marketplace plugin, `/codecall`
-for the npm standalone skill in Claude Code. The Quickstart table above maps
-each install path to its command.
+**Which command do I type?** `$codecall` in Codex. In Claude Code: `/codecall:codecall`
+if you installed the plugin, or plain `/codecall` if you used `npm install -g codecall`.
 
-**I installed it but the command does nothing.** Restart the agent or start a
-new task/conversation so it reloads installed plugins/skills—an already-open
-session won't pick up a new install.
+**I installed it, but nothing happens.** Restart Codex/Claude Code, or start a
+new task — an already-open session won't see a fresh install.
 
-**Does this ever call an external API or upload my code?** No. See
-[Privacy](#privacy).
+**Does it ever send my code anywhere?** No — see Privacy above.
 
-**I updated the plugin/package but still see old behavior.** See
-[Plugin development](#plugin-development) and
-[Development](#development) below for the exact refresh commands.
+## For developers
 
-## Development
+Want to build, test, or contribute? See [ARCHITECTURE.md](ARCHITECTURE.md)
+for the full technical design.
 
 ```bash
 npm install
@@ -253,48 +180,34 @@ npm run build
 npm test
 ```
 
-### Plugin development
-
-The canonical plugin lives in `plugins/codecall/`. Validate it with the
-Claude Code CLI before release:
+Validate the plugin before releasing:
 
 ```bash
 claude plugin validate ./plugins/codecall
 ```
 
-If you have OpenAI's `plugin-creator` skill installed locally, its
-`validate_plugin.py` script can validate the same directory for Codex; the
-path is local to that skill's install and isn't part of this repo.
-
-After updating the Claude marketplace plugin, users refresh it with
-`/plugin marketplace update codecall` and `/reload-plugins`. Codex users refresh
-the configured marketplace with `codex plugin marketplace upgrade codecall` and
-reinstall `codecall@codecall` if needed.
+Want codecall to show up in Codex's or Claude Code's built-in searchable
+plugin list (not just install-by-link)? That needs a separate submission to
+each company — see
+[Getting listed in curated marketplaces](#getting-listed-in-curated-marketplaces).
 
 ### Getting listed in curated marketplaces
 
-The Quickstart above works today via `marketplace add <this-repo-url>`, but
-`codecall` is not yet listed in either agent's built-in, searchable directory.
-Listing there is a separate, manual submission to each vendor:
-
 **Claude Code** — submit via the
-[Plugin Directory Submission Form](https://clau.de/plugin-directory-submission)
-for inclusion in `claude-plugins-official` or the community-reviewed
-`claude-community` marketplace. The repo already satisfies the required
-structure (`plugins/codecall/.claude-plugin/plugin.json`, README, homepage).
-Note the plugin `name` becomes immutable once accepted.
+[Plugin Directory Submission Form](https://clau.de/plugin-directory-submission).
+The plugin `name` becomes permanent once accepted.
 
-**Codex** — submit through the OpenAI Platform plugin portal at
-`platform.openai.com/plugins`, which requires an org with "Apps Management:
-Write" permission and a verified identity. Since `codecall` has no MCP
-server, this is a skills-only submission: listing copy, support/privacy/terms
-URLs, and a minimum of five positive and three negative test cases (prompt,
-expected behavior, result shape). Review is asynchronous with no guaranteed
-timeline.
+**Codex** — submit through `platform.openai.com/plugins`, which requires a
+verified OpenAI Platform identity and at least five positive and three
+negative test cases. Review is asynchronous with no fixed timeline.
+
+### Advanced: using it as a code library
+
+If you're building your own tool on top of codecall, the core runtime is also
+a plain TypeScript library (`import { codecall } from "codecall"`). This is a
+deterministic, offline demo/test runtime, not the AI-powered product
+experience above. See [ARCHITECTURE.md](ARCHITECTURE.md) for the API.
 
 ## License
 
 [MIT](LICENSE)
-
-See [ARCHITECTURE.md](ARCHITECTURE.md) for the full design, privacy posture,
-event model, state machine, and planned provider integrations.
