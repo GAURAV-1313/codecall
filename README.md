@@ -62,6 +62,16 @@ That's the whole product — a short, focused conversation about the code that
 was just written, grounded in what actually happened, not a generic
 tutorial.
 
+### It's not just for auth
+
+Say your assistant instead added retry logic with exponential backoff around
+a flaky payment API call. codecall would recommend a session on *why* retries
+need backoff and jitter instead of just trying again immediately, teach that
+using your actual retry code, then check whether you can spot when retrying
+is the wrong call (like after a non-idempotent request that already went
+through). Same short format — a couple of ideas, a couple of questions, a
+summary — just grounded in whatever you actually built.
+
 ## Requirements
 
 - Codex or Claude Code, already installed.
