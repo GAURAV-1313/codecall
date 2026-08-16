@@ -1,5 +1,7 @@
 # codecall
 
+[**Website**](https://codecall-theta.vercel.app/) · [npm](https://www.npmjs.com/package/codecall) · [GitHub](https://github.com/GAURAV-1313/codecall)
+
 **codecall teaches you the code you just wrote.**
 
 After you (or your AI coding assistant) finish building something, codecall
