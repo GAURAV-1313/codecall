@@ -127,9 +127,11 @@
     background-position:center 20%;
   }
   .hero-bg::after{
-    /* dark scrim so hero text/buttons stay legible over the photo */
+    /* dark scrim so hero text/buttons stay legible, plus a 4-side vignette that
+       frames the low-res photo instead of letting its stretched edges show */
     content:"";position:absolute;inset:0;
     background:
+      radial-gradient(115% 100% at 50% 50%, transparent 50%, rgba(6,8,10,.5) 82%, rgba(6,8,10,.96) 100%),
       linear-gradient(100deg, rgba(6,8,10,.55) 0%, rgba(6,8,10,.38) 42%, rgba(6,8,10,.15) 68%, rgba(6,8,10,.30) 100%),
       linear-gradient(0deg, rgba(6,8,10,.30) 0%, rgba(6,8,10,.02) 30%, rgba(6,8,10,.08) 100%);
   }
