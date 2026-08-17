@@ -152,19 +152,36 @@
   #blobMain{width:180px;height:180px;margin:-90px 0 0 -90px;}
   #blobTrail{width:110px;height:110px;margin:-55px 0 0 -55px;opacity:.6;filter:blur(10px);}
   .hero .wrap{position:relative;z-index:3;width:100%;}
-  .hero-grid{display:grid;grid-template-columns:1.15fr 1fr;gap:56px;align-items:start;}
-  @media (max-width:900px){ .hero-grid{grid-template-columns:1fr;} }
+  .hero-grid{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);gap:56px;align-items:start;}
+  .hero-grid > *{min-width:0;}
+  @media (max-width:900px){
+    .hero-grid{grid-template-columns:minmax(0,1fr);}
+    /* the desktop scrim is biased left-to-right for the 2-column layout; on a
+       single stacked column the photo needs to be uniformly darker so text and
+       the translucent glass buttons stay legible against it */
+    .hero-bg::after{
+      background:
+        radial-gradient(120% 100% at 50% 45%, transparent 35%, rgba(6,8,10,.62) 72%, rgba(6,8,10,.97) 100%),
+        linear-gradient(180deg, rgba(6,8,10,.68) 0%, rgba(6,8,10,.58) 35%, rgba(6,8,10,.58) 70%, rgba(6,8,10,.8) 100%);
+    }
+    .btn-secondary{background:rgba(10,12,14,.42);}
+    .btn-secondary:hover{background:rgba(10,12,14,.55);}
+  }
 
   .hero h1{font-size:clamp(2.05rem,1.35rem + 3vw,3.1rem);line-height:1.12;letter-spacing:-.02em;margin-bottom:22px;}
   .hero p{color:var(--text-dim);font-size:1.03rem;margin:0 0 14px;max-width:52ch;}
   .hero-actions{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:12px;margin-top:30px;max-width:460px;}
   .hero-actions .btn{width:100%;}
-  @media (max-width:480px){ .hero-actions{grid-template-columns:1fr;max-width:100%;} }
+  @media (max-width:480px){
+    .hero-actions{max-width:100%;gap:9px;}
+    .hero-actions .btn{padding:10px 10px;font-size:12.5px;gap:6px;}
+    .hero-actions .btn svg{width:14px;height:14px;}
+  }
 
 
   /* ---------- terminal card ---------- */
   .term-card{
-    background:rgba(10,11,13,.5);border-radius:16px;overflow:hidden;
+    background:rgba(10,11,13,.5);border-radius:16px;overflow:hidden;min-width:0;
   }
   .term-tabs{display:flex;border-bottom:1px solid rgba(255,255,255,.10);}
   .term-tab{
@@ -186,7 +203,7 @@
   }
   .copy-btn:hover{color:var(--text);background:rgba(255,255,255,.06);}
   .copy-btn svg{width:14px;height:14px;}
-  .term-body{padding:22px 20px 26px;min-height:112px;}
+  .term-body{padding:22px 20px 26px;min-height:112px;overflow-x:auto;}
   .term-line{font-family:var(--mono);font-size:13.5px;line-height:1.9;color:var(--text-dim);white-space:pre;}
   .term-line .pmt{color:var(--accent);margin-right:8px;}
   .term-panel{display:none;}
@@ -194,7 +211,7 @@
   .term-note{margin:14px 0 0;font-size:12.5px;color:var(--text-faint);font-family:var(--sans);}
   .term-note code{font-family:var(--mono);color:var(--text-dim);}
 
-  .hero-side{display:flex;flex-direction:column;}
+  .hero-side{display:flex;flex-direction:column;min-width:0;}
   .npm-stat{margin-top:28px;padding:0 6px;}
   .npm-stat-top{display:flex;align-items:center;gap:12px;}
   .npm-stat svg{width:28px;height:28px;color:#fbbf24;flex:none;filter:drop-shadow(0 0 10px rgba(251,191,36,.55));}
