@@ -74,6 +74,14 @@ is the wrong call (like after a non-idempotent request that already went
 through). Same short format — a couple of ideas, a couple of questions, a
 summary — just grounded in whatever you actually built.
 
+Or say your assistant added a database index to speed up a slow query.
+codecall would recommend a session on *why* that specific index helps — how
+the query planner uses it, which column order matters, and when an index
+actually hurts (like on a write-heavy table). It would teach that using your
+real schema and query, then check whether you can predict which future queries
+this index will and won't help. Same short format — a couple of ideas, a
+couple of questions, a summary — grounded in the change you just made.
+
 ## Requirements
 
 - Codex or Claude Code, already installed.
