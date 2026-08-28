@@ -515,14 +515,11 @@
   // ---- copy buttons ----
   document.querySelectorAll('.copy-btn[data-copy-target]').forEach(function(btn){
     btn.addEventListener('click', function(){
-      var id = btn.getAttribute('data-copy-target');
-      var text;
-      if (id.indexOf('tab-') === 0) {
-        var panel = document.getElementById(id);
-        text = Array.from(panel.querySelectorAll('.term-line')).map(function(l){return l.textContent.replace(/^\s*[\$>]\s*/, '');}).join('\n');
-      } else {
-        var el = document.getElementById(id);
-        text = el ? el.textContent.trim() : '';
+      var cardGroup = btn.closest('.term-card');
+      var activePanel = cardGroup ? cardGroup.querySelector('.term-panel.active') : null;
+      var text = '';
+      if (activePanel) {
+        text = Array.from(activePanel.querySelectorAll('.term-line')).map(function(l){return l.textContent.replace(/^\s*[\$>]\s*/, '');}).join('\n');
       }
       navigator.clipboard.writeText(text).then(function(){
         var label = btn.querySelector('.copy-label');
