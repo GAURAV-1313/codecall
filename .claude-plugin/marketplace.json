@@ -9,7 +9,7 @@
       "name": "codecall",
       "source": "./plugins/codecall",
       "description": "Adaptive implementation-grounded learning for Claude Code.",
-      "version": "1.2.2",
+      "version": "1.3.0",
       "author": {
         "name": "Gaurav"
       }

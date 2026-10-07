@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- Fill every double-brace placeholder and remove unused concept rows. Keep the two meta tags: later sessions read them for the streak line. -->
+<meta name="codecall-score" content="{{SCORE_N}}/{{SCORE_M}}">
+<meta name="codecall-date" content="{{DATE}}">
+<title>codecall · {{TITLE}}</title>
+<style>
+  :root { --bg:#fbfaf7; --ink:#151515; --muted:#6b6760; --line:#e4e0d8; --ok:#1f7a4d; --no:#b3261e; --accent:#2b3e8c; }
+  @media (prefers-color-scheme: dark) { :root { --bg:#161513; --ink:#ece8e0; --muted:#9a948a; --line:#2c2a26; --ok:#5fc48d; --no:#f28b82; --accent:#9fb0ff; } }
+  * { box-sizing: border-box; }
+  body { margin:0; background:var(--bg); color:var(--ink); font: 18px/1.45 ui-sans-serif, -apple-system, "Segoe UI", Inter, Roboto, sans-serif; }
+  main { max-width: 720px; margin: 0 auto; padding: 48px 24px 64px; }
+  .brand { font-size: 13px; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
+  h1 { font-size: 28px; line-height: 1.2; margin: 8px 0 4px; }
+  .date { color: var(--muted); font-size: 15px; margin-bottom: 28px; }
+  .score { font-size: 56px; font-weight: 700; line-height: 1; margin: 0 0 4px; }
+  .score small { font-size: 18px; font-weight: 500; color: var(--muted); margin-left: 8px; }
+  .streak { color: var(--muted); font-size: 15px; margin-bottom: 32px; }
+  h2 { font-size: 13px; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); margin: 32px 0 12px; }
+  ul { list-style: none; padding: 0; margin: 0; }
+  li { padding: 10px 0; border-top: 1px solid var(--line); }
+  li:last-child { border-bottom: 1px solid var(--line); }
+  .concept { display: grid; grid-template-columns: 28px 1fr; gap: 8px; align-items: baseline; }
+  .ok { color: var(--ok); } .no { color: var(--no); }
+  .concept b { display: block; }
+  .concept span { color: var(--muted); font-size: 16px; }
+  .points li::before { content: "→ "; color: var(--accent); }
+  footer { margin-top: 40px; font-size: 13px; color: var(--muted); }
+  @media print { body { background: #fff; color: #000; } main { padding: 0; } }
+</style>
+</head>
+<body>
+<main>
+  <div class="brand">codecall receipt</div>
+  <h1>{{TITLE}}</h1>
+  <div class="date">{{DATE}}</div>
+
+  <p class="score">{{SCORE_N}} of {{SCORE_M}}<small>ideas I could explain</small></p>
+  <div class="streak">{{STREAK_LINE_OR_EMPTY}}</div>
+
+  <h2>What was in the change</h2>
+  <ul>
+    <!-- One li per concept. Use class="ok" with ✅ or class="no" with ❌. -->
+    <li class="concept"><span class="ok">✅</span><div><b>{{CONCEPT_1}}</b><span>{{WHY_1}}</span></div></li>
+    <li class="concept"><span class="no">❌</span><div><b>{{CONCEPT_2}}</b><span>{{WHY_2}}</span></div></li>
+  </ul>
+
+  <h2>Points to remember</h2>
+  <ul class="points">
+    <li>{{POINT_1}}</li>
+    <li>{{POINT_2}}</li>
+    <li>{{POINT_3}}</li>
+  </ul>
+
+  <h2>Before reusing this pattern elsewhere</h2>
+  <ul class="points">
+    <li>{{EDGE_CASE_1}}</li>
+    <li>{{EDGE_CASE_2}}</li>
+  </ul>
+
+  <footer>Written locally by codecall. Nothing was uploaded. Delete ./codecall/ to forget every session.</footer>
+</main>
+</body>
+</html>
