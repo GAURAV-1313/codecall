@@ -34,8 +34,8 @@ describe("plugin package", () => {
     const claude = json(join(pluginRoot, ".claude-plugin", "plugin.json"));
     expect(codex.name).toBe("codecall");
     expect(claude.name).toBe("codecall");
-    expect(codex.version).toBe("1.4.0");
-    expect(claude.version).toBe("1.4.0");
+    expect(codex.version).toBe("1.5.0");
+    expect(claude.version).toBe("1.5.0");
     expect(codex).not.toHaveProperty("hooks");
     expect(codex).not.toHaveProperty("mcpServers");
     expect(claude).not.toHaveProperty("hooks");
@@ -54,13 +54,13 @@ describe("plugin package", () => {
     expect((codexPlugin.source as Record<string, unknown>).path).toBe("./plugins/codecall");
     expect(claudePlugin.name).toBe("codecall");
     expect(claudePlugin.source).toBe("./plugins/codecall");
-    expect(claudePlugin.version).toBe("1.4.0");
+    expect(claudePlugin.version).toBe("1.5.0");
   });
 
   it("includes the canonical plugin in the npm package definition", () => {
     const packageJson = json(join(root, "package.json"));
     expect(packageJson.name).toBe("codecall");
-    expect(packageJson.version).toBe("1.4.0");
+    expect(packageJson.version).toBe("1.5.0");
     expect(packageJson.files).toContain("plugins/codecall");
     expect(packageJson.files).not.toContain("skill");
   });
@@ -103,6 +103,30 @@ describe("plugin package", () => {
     expect(fields.tools).not.toMatch(/\bEdit\b/);
   });
 
+  it("routes drill and trace modes to their references and receipts", () => {
+    const skillDir = join(pluginRoot, "skills", "codecall");
+    const references = join(skillDir, "references");
+    for (const file of ["drill.md", "trace.md", "drill-receipt-template.html"]) {
+      expect(existsSync(join(references, file))).toBe(true);
+    }
+
+    const skill = readFileSync(join(skillDir, "SKILL.md"), "utf8");
+    expect(skill).toContain("(references/drill.md)");
+    expect(skill).toContain("(references/trace.md)");
+
+    const drill = readFileSync(join(references, "drill.md"), "utf8");
+    expect(drill).toContain("(drill-receipt-template.html)");
+    expect(drill).toMatch(/git status --porcelain/);
+    expect(drill).toMatch(/git checkout -- <file>/);
+
+    const receipt = readFileSync(join(references, "receipt-template.html"), "utf8");
+    expect(receipt).toContain('name="codecall-mode"');
+    const drillReceipt = readFileSync(join(references, "drill-receipt-template.html"), "utf8");
+    for (const tag of ["codecall-mode", "codecall-drill", "codecall-hints", "codecall-minutes", "codecall-date", "codecall-concepts"]) {
+      expect(drillReceipt).toContain(`name="${tag}"`);
+    }
+  });
+
   it("keeps the SKILL.md description short and trigger-complete", () => {
     const fields = frontmatter(join(pluginRoot, "skills", "codecall", "SKILL.md"));
     expect(fields.description.length).toBeLessThan(200);
@@ -111,5 +135,7 @@ describe("plugin package", () => {
     expect(fields.description).toMatch(/quiz|explain/i);
     expect(fields.description).toMatch(/start learning/i);
     expect(fields.description).toMatch(/skip/i);
+    expect(fields.description).toMatch(/drill/i);
+    expect(fields.description).toMatch(/trace/i);
   });
 });

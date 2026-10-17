@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <title>codecall — learn the code you just shipped</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="description" content="codecall turns what your AI assistant just built into a short, grounded quiz — inside Codex or Claude Code. No signup, no API key, nothing leaves your machine.">
+<meta name="description" content="codecall turns what your AI assistant just built into a short, grounded quiz, and drills you on planted bugs in your own project — inside Codex or Claude Code. No signup, no API key, nothing leaves your machine.">
 <meta property="og:title" content="codecall — learn the code you just shipped">
 <meta property="og:description" content="After your AI assistant finishes building something, codecall teaches you the 2–4 ideas behind it and checks your understanding. No signup, no API key.">
 <meta property="og:type" content="website">
@@ -170,6 +170,7 @@
 
   .hero h1{font-size:clamp(2.05rem,1.35rem + 3vw,3.1rem);line-height:1.12;letter-spacing:-.02em;margin-bottom:22px;}
   .hero p{color:var(--text-dim);font-size:1.03rem;margin:0 0 14px;max-width:52ch;}
+  .hero p a{color:var(--accent-strong);text-underline-offset:3px;}
   .hero-actions{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:12px;margin-top:30px;max-width:460px;}
   .hero-actions .btn{width:100%;}
   @media (max-width:480px){
@@ -225,6 +226,30 @@
     font-family:var(--mono);font-size:12px;letter-spacing:.05em;text-transform:uppercase;
     color:var(--text-faint);
   }
+  /* ---------- drill & trace ---------- */
+  .modes{border-top:1px solid rgba(255,255,255,.06);background:linear-gradient(180deg,var(--bg-soft) 0%,var(--bg) 100%);}
+  .modes h2{font-size:clamp(1.7rem,1.2rem + 2vw,2.4rem);line-height:1.15;letter-spacing:-.02em;margin-bottom:16px;}
+  .modes .lede{margin:0 0 48px;}
+  .mode-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:24px;}
+  @media (max-width:900px){ .mode-grid{grid-template-columns:minmax(0,1fr);} }
+  .mode-card{background:rgba(255,255,255,.035);border-radius:var(--radius-card);padding:28px;min-width:0;display:flex;flex-direction:column;}
+  .mode-tag{font-family:var(--mono);font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--accent-2);margin:0 0 10px;}
+  .mode-card h3{font-size:1.35rem;margin-bottom:10px;}
+  .mode-card h3 code{font-family:var(--mono);font-weight:500;font-size:.92em;color:var(--accent-strong);}
+  .mode-card > p{color:var(--text-dim);margin:0 0 20px;}
+  .demo{background:rgba(6,7,9,.7);border:1px solid var(--card-border);border-radius:14px;padding:16px 18px;margin:0 0 20px;}
+  .demo-line{display:grid;grid-template-columns:76px minmax(0,1fr);gap:10px;font-family:var(--mono);font-size:13px;line-height:1.65;color:var(--text-dim);padding:3px 0;}
+  .demo-line .who{color:var(--text-faint);}
+  .demo-line.cmd .who,.demo-line.cmd span:last-child{color:var(--accent);}
+  .demo-line.you span:last-child{color:var(--text);}
+  .demo-line .ok{color:#5fe0a8;}
+  .demo-chain{font-family:var(--mono);font-size:12.5px;color:var(--accent-strong);background:var(--accent-soft);border-radius:8px;padding:8px 10px;margin:6px 0;overflow-wrap:anywhere;}
+  .ladder{list-style:none;padding:0;margin:0 0 18px;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;counter-reset:hint;}
+  .ladder li{counter-increment:hint;font-size:13px;color:var(--text-dim);border:1px solid var(--card-border);border-radius:var(--radius-sm);padding:10px 10px 9px;}
+  .ladder li::before{content:"hint " counter(hint);display:block;font-family:var(--mono);font-size:11px;color:var(--text-faint);margin-bottom:2px;}
+  @media (max-width:480px){ .ladder{grid-template-columns:repeat(2,minmax(0,1fr));} .demo-line{grid-template-columns:62px minmax(0,1fr);font-size:12.5px;} .mode-card{padding:22px 18px;} }
+  .facts{list-style:none;padding:0;margin:auto 0 0;display:flex;flex-wrap:wrap;gap:8px;}
+  .facts li{font-family:var(--mono);font-size:12px;color:var(--text-dim);background:rgba(255,255,255,.05);border-radius:var(--radius-pill);padding:5px 12px;}
 
   @media (prefers-reduced-motion:reduce){
     html{scroll-behavior:auto;}
@@ -242,7 +267,7 @@
         <circle cx="16" cy="16" r="2" fill="var(--accent)"/>
       </svg>
       <span class="brand-name">codecall</span>
-      <span class="brand-badge">v1.2.1</span>
+      <span class="brand-badge">v1.5.0</span>
     </a>
     <div class="nav-right">
       <a class="btn btn-secondary btn-sm lg" data-lg="btn" href="https://github.com/GAURAV-1313/codecall#readme">Docs</a>
@@ -272,6 +297,7 @@
           <h1>codecall teaches you the code you just wrote.</h1>
           <p>After you (or your AI assistant) finish building something, codecall turns that work into a quick, friendly quiz — so you actually understand what was built, not just that it works.</p>
           <p>It runs inside Codex or Claude Code, the AI coding tools you already use. No extra app, no signup, no API key.</p>
+          <p>New: <a href="#drill">drill and trace</a> turn your own project into practice for debugging interview rounds.</p>
 
           <div class="hero-actions">
             <a class="btn btn-primary lg" data-lg="btn-primary" href="https://github.com/GAURAV-1313/codecall">
@@ -319,7 +345,7 @@
               <div class="term-line"><span class="pmt">&gt;</span>/plugin marketplace add https://github.com/GAURAV-1313/codecall</div>
               <div class="term-line"><span class="pmt">&gt;</span>/plugin install codecall@codecall</div>
             </div>
-            <p class="term-note">Then type <code>/codecall</code> in Claude Code or <code>$codecall</code> in Codex.</p>
+            <p class="term-note">Then type <code>/codecall</code> in Claude Code or <code>$codecall</code> in Codex. Add <code>drill</code> or <code>trace</code> for the new modes.</p>
           </div>
         </div>
 
@@ -331,6 +357,61 @@
           <span class="npm-stat-label">installs on npm since launch</span>
         </div>
         </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- DRILL & TRACE -->
+  <section class="modes section-pad" id="drill">
+    <div class="wrap">
+      <p class="eyebrow">New in v1.5 &middot; for debugging rounds</p>
+      <h2>Drill and trace: debug your own code before an interviewer asks you to.</h2>
+      <p class="lede">The quiz checks that you understand what was built. Drill and trace check that you can find your way through it, and find what's broken, on your real project.</p>
+
+      <div class="mode-grid">
+        <article class="mode-card lg" data-lg="card">
+          <p class="mode-tag">Drill</p>
+          <h3><code>/codecall drill</code></h3>
+          <p>Plants one realistic bug in your project, tells you only the symptom, and stays out of your way while you debug. When you find it or give up, it shows the change and restores the file with Git.</p>
+          <div class="demo" role="group" aria-label="Example drill">
+            <div class="demo-line cmd"><span class="who">&gt;</span><span>/codecall drill src/cart medium</span></div>
+            <div class="demo-line"><span class="who">codecall</span><span>Checkout totals come out short for some carts. Reproduce: <b>npm test -- cart</b></span></div>
+            <div class="demo-line you"><span class="who">you</span><span>hint</span></div>
+            <div class="demo-line"><span class="who">codecall</span><span>Look at how the total is computed, not the API layer.</span></div>
+            <div class="demo-line you"><span class="who">you</span><span>The loop stops one item early, line 3.</span></div>
+            <div class="demo-line"><span class="who">codecall</span><span><span class="ok">Found it</span> &middot; 9 min &middot; 1 of 4 hints. File restored.</span></div>
+          </div>
+          <ol class="ladder" aria-label="Hints, from least to most specific">
+            <li>where to look</li>
+            <li>what to log</li>
+            <li>the function</li>
+            <li>the line</li>
+          </ol>
+          <ul class="facts">
+            <li>easy &middot; medium &middot; hard</li>
+            <li>needs a clean Git tree</li>
+            <li>never commits</li>
+            <li>never offered automatically</li>
+          </ul>
+        </article>
+
+        <article class="mode-card lg" data-lg="card" id="trace">
+          <p class="mode-tag">Trace</p>
+          <h3><code>/codecall trace</code></h3>
+          <p>Follows one request from its entry point to the end, <code>file:line</code> by <code>file:line</code>, then checks you on the 2 or 3 hops where a bug would most likely hide. Read-only: it never edits code.</p>
+          <div class="demo" role="group" aria-label="Example trace">
+            <div class="demo-line cmd"><span class="who">&gt;</span><span>/codecall trace POST /login</span></div>
+            <div class="demo-chain">routes/auth.ts:login &rarr; AuthService.verify &rarr; users.findByEmail &rarr; bcrypt.compare &rarr; signJwt</div>
+            <div class="demo-line"><span class="who">codecall</span><span>If findByEmail returns nothing, what does the client get, and where is that decided?</span></div>
+            <div class="demo-line you"><span class="who">you</span><span>A 401, thrown in AuthService.verify.</span></div>
+            <div class="demo-line"><span class="who">codecall</span><span><span class="ok">Could explain 3 of 3</span> hops. Receipt saved.</span></div>
+          </div>
+          <ul class="facts">
+            <li>any route, job or UI event</li>
+            <li>one question per hop</li>
+            <li>same receipt as the quiz</li>
+          </ul>
+        </article>
       </div>
     </div>
   </section>

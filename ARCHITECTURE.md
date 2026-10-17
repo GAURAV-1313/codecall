@@ -519,7 +519,9 @@ Future long-term memory consumes completed `Summary` events through a separate
 `LearnerProfileStore`; it must not alter the MVP session schema. Knowledge graphs
 can consume `Concept` and `DependencyEdge` records. Spaced repetition can
 subscribe to `Evaluation` and `Summary` events. Interview mode replaces the
-quiz worker behind the same `AssessmentStrategy` interface. New agent support
+quiz worker behind the same `AssessmentStrategy` interface; the skill's
+`drill` and `trace` modes (`references/drill.md`, `references/trace.md`) are
+the first prompt-level versions of it and do not touch this runtime. New agent support
 implements `ProviderAdapter`; new documentation sources implement
 `DocumentationProvider`.
 
