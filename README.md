@@ -79,6 +79,36 @@ It is not just for auth. Retry logic with backoff, a new database index, a
 cache layer, a webhook handler: anything with a *why* behind it gets the same
 short format, grounded in what was actually built.
 
+## Drill: debugging practice
+
+For debugging interview rounds, `/codecall drill` runs one on your own project:
+
+```text
+/codecall drill src/orders medium
+```
+
+It plants **one** realistic bug (an off-by-one, a missing `await`, an
+unhandled empty case, a wrong status code), tells you only the symptom and how
+to reproduce it, and stays out of your way while you debug. Ask for a hint
+when you're stuck: where to look, then what to log, then the function, then
+the line. When you find it or give up, it shows the planted change, explains
+the fastest route to it, and restores the file with Git.
+
+The drill receipt records found or missed, minutes, hints used, and one habit
+to work on. Difficulty is `easy` (it crashes near the bug), `medium` (wrong
+output one layer away) or `hard` (only some inputs, or silent).
+
+Drills need Git and a clean working tree, and only start when you ask: the
+automatic offer never proposes one. If your editor shows the edit for
+approval, approve it without reading it.
+
+## Trace: follow one flow
+
+`/codecall trace POST /login` walks one request from its entry point to the
+end, `file:line` by `file:line`, ends with the whole path as one chain, then
+checks you on the 2 or 3 hops where a bug would most likely hide. It never
+edits code, and it writes the usual receipt.
+
 ## Why it exists
 
 It is easy to accept code from an AI assistant without fully understanding it.
@@ -92,7 +122,7 @@ Each session covers 2 to 4 ideas. An idea counts as *could explain* when you
 answer both of its checks correctly without a reteach. The score is `N of M`
 ideas, nothing else: no time-on-task, no mastery claim, no guess at what you
 would have known anyway. Earlier receipts in `./codecall/` add a streak line
-(sessions this week, running explain rate) and nothing more.
+(sessions this week, running explain rate, drills found) and nothing more.
 
 ## Backend concept map
 
@@ -116,6 +146,9 @@ them. codecall is not affiliated with or endorsed by the series' creator.
   separate model call.
 - The receipt is the only thing it writes, into `./codecall/` in your
   project. Delete the folder to forget every session.
+- A drill is the one exception: it changes one file in your project for the
+  length of the drill, then restores it with Git before writing the receipt.
+  It never commits, stashes or branches.
 - The plugin's automatic-offer script runs entirely on your machine and only
   ever adds a text reminder; it cannot edit files or run commands.
 - On the Claude Code plugin, the read-only planning step runs in an isolated

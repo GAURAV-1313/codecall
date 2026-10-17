@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- Fill every double-brace placeholder. Keep the meta tags: later sessions read them for the streak line. -->
+<meta name="codecall-mode" content="drill">
+<!-- "found" or "missed". -->
+<meta name="codecall-drill" content="{{FOUND_OR_MISSED}}">
+<meta name="codecall-hints" content="{{HINTS}}">
+<meta name="codecall-minutes" content="{{MINUTES}}">
+<meta name="codecall-date" content="{{DATE}}">
+<!-- The mapped concept the bug exercised, e.g. "http-status-codes:ok" (ok means found with at most two hints); leave content empty when nothing was mapped. -->
+<meta name="codecall-concepts" content="{{MAPPED_CONCEPT_OR_EMPTY}}">
+<title>codecall drill · {{AREA}}</title>
+<style>
+  :root { --bg:#fbfaf7; --ink:#151515; --muted:#6b6760; --line:#e4e0d8; --ok:#1f7a4d; --no:#b3261e; --accent:#2b3e8c; }
+  @media (prefers-color-scheme: dark) { :root { --bg:#161513; --ink:#ece8e0; --muted:#9a948a; --line:#2c2a26; --ok:#5fc48d; --no:#f28b82; --accent:#9fb0ff; } }
+  * { box-sizing: border-box; }
+  body { margin:0; background:var(--bg); color:var(--ink); font: 18px/1.45 ui-sans-serif, -apple-system, "Segoe UI", Inter, Roboto, sans-serif; }
+  main { max-width: 720px; margin: 0 auto; padding: 48px 24px 64px; }
+  .brand { font-size: 13px; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
+  h1 { font-size: 28px; line-height: 1.2; margin: 8px 0 4px; }
+  .date { color: var(--muted); font-size: 15px; margin-bottom: 28px; }
+  .score { font-size: 56px; font-weight: 700; line-height: 1; margin: 0 0 4px; }
+  .score small { font-size: 18px; font-weight: 500; color: var(--muted); margin-left: 8px; }
+  .streak { color: var(--muted); font-size: 15px; margin-bottom: 32px; }
+  h2 { font-size: 13px; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); margin: 32px 0 12px; }
+  ul { list-style: none; padding: 0; margin: 0; }
+  li { padding: 10px 0; border-top: 1px solid var(--line); }
+  li:last-child { border-bottom: 1px solid var(--line); }
+  .concept { display: grid; grid-template-columns: 28px 1fr; gap: 8px; align-items: baseline; }
+  .ok { color: var(--ok); } .no { color: var(--no); }
+  .concept b { display: block; }
+  .concept span { color: var(--muted); font-size: 16px; }
+  .points li::before { content: "→ "; color: var(--accent); }
+  .deeper { display: block; margin-top: 4px; font-size: 15px; color: var(--muted); }
+  .result.ok { color: var(--ok); } .result.no { color: var(--no); }
+  .deeper a { color: var(--accent); }
+  footer { margin-top: 40px; font-size: 13px; color: var(--muted); }
+  @media print { body { background: #fff; color: #000; } main { padding: 0; } }
+</style>
+</head>
+<body>
+<main>
+  <div class="brand">codecall drill</div>
+  <h1>{{AREA}}</h1>
+  <div class="date">{{DATE}} · {{DIFFICULTY}}</div>
+
+  <!-- class="result ok" with "Found it" or class="result no" with "Missed it". -->
+  <p class="score result ok">{{FOUND_IT_OR_MISSED_IT}}<small>{{MINUTES}} min · {{HINTS}} of 4 hints</small></p>
+  <div class="streak">{{STREAK_LINE_OR_EMPTY}}</div>
+
+  <h2>The bug</h2>
+  <ul>
+    <!-- Keep the deeper line only for a missed drill whose bug maps to a concept card, with that card's links (drop the second link when the card has one); delete it otherwise. -->
+    <li class="concept"><span class="no">●</span><div><b>{{BUG_KIND}}</b><span>{{FILE_NAME}}: {{WHY_IT_CAUSED_THE_SYMPTOM}}</span><span class="deeper">Go deeper: <a href="{{LINK_1_URL}}">{{LINK_1_TEXT}}</a> · <a href="{{LINK_2_URL}}">{{LINK_2_TEXT}}</a></span></div></li>
+  </ul>
+
+  <h2>What went well</h2>
+  <ul class="points">
+    <li>{{WENT_WELL}}</li>
+  </ul>
+
+  <h2>Habit to work on</h2>
+  <ul class="points">
+    <li>{{HABIT}}</li>
+  </ul>
+
+  <h2>Fastest route</h2>
+  <ul class="points">
+    <li>{{FASTEST_ROUTE}}</li>
+  </ul>
+
+  <footer>Written locally by codecall. The planted bug was removed with Git before this receipt was written. Nothing was uploaded.</footer>
+</main>
+</body>
+</html>
