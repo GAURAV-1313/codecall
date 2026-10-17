@@ -3,9 +3,11 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<!-- Fill every double-brace placeholder and remove unused concept rows. Keep the two meta tags: later sessions read them for the streak line. -->
+<!-- Fill every double-brace placeholder and remove unused concept rows. Keep the three meta tags: later sessions read them for the streak line. -->
 <meta name="codecall-score" content="{{SCORE_N}}/{{SCORE_M}}">
 <meta name="codecall-date" content="{{DATE}}">
+<!-- Mapped concepts only, e.g. "cache-aside:ok,cache-invalidation:no"; leave content empty when nothing was mapped. -->
+<meta name="codecall-concepts" content="{{MAPPED_CONCEPTS_OR_EMPTY}}">
 <title>codecall · {{TITLE}}</title>
 <style>
   :root { --bg:#fbfaf7; --ink:#151515; --muted:#6b6760; --line:#e4e0d8; --ok:#1f7a4d; --no:#b3261e; --accent:#2b3e8c; }
@@ -28,6 +30,8 @@
   .concept b { display: block; }
   .concept span { color: var(--muted); font-size: 16px; }
   .points li::before { content: "→ "; color: var(--accent); }
+  .deeper { display: block; margin-top: 4px; font-size: 15px; color: var(--muted); }
+  .deeper a { color: var(--accent); }
   footer { margin-top: 40px; font-size: 13px; color: var(--muted); }
   @media print { body { background: #fff; color: #000; } main { padding: 0; } }
 </style>
@@ -43,9 +47,9 @@
 
   <h2>What was in the change</h2>
   <ul>
-    <!-- One li per concept. Use class="ok" with ✅ or class="no" with ❌. -->
+    <!-- One li per concept. Use class="ok" with ✅ or class="no" with ❌. Only a ❌ concept with a map id keeps the deeper line, with its card's links (drop the second link when the card has one); delete it everywhere else. -->
     <li class="concept"><span class="ok">✅</span><div><b>{{CONCEPT_1}}</b><span>{{WHY_1}}</span></div></li>
-    <li class="concept"><span class="no">❌</span><div><b>{{CONCEPT_2}}</b><span>{{WHY_2}}</span></div></li>
+    <li class="concept"><span class="no">❌</span><div><b>{{CONCEPT_2}}</b><span>{{WHY_2}}</span><span class="deeper">Go deeper: <a href="{{LINK_1_URL}}">{{LINK_1_TEXT}}</a> · <a href="{{LINK_2_URL}}">{{LINK_2_TEXT}}</a></span></div></li>
   </ul>
 
   <h2>Points to remember</h2>

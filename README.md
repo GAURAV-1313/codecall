@@ -94,6 +94,21 @@ ideas, nothing else: no time-on-task, no mastery claim, no guess at what you
 would have known anyway. Earlier receipts in `./codecall/` add a streak line
 (sessions this week, running explain rate) and nothing more.
 
+## Backend concept map
+
+For server-side changes, codecall uses a small built-in map of about 80
+backend concepts: HTTP, auth, databases, caching, queues, webhooks, real-time,
+storage, testing and delivery. It gives concepts stable names, orders them by
+what you need to know first, and supplies known misconceptions. You never see
+the map. If a change matches nothing in it, codecall works exactly as before.
+
+When you miss a mapped concept, the receipt adds one **Go deeper** line: the
+matching chapter of Sriniously's free
+[Backend from first principles](https://www.youtube.com/playlist?list=PLui3EUkuMTPgZcV0QhQrOcwMPcBCcd_Q1)
+series, plus an official reference (MDN, OWASP, PostgreSQL and similar). The
+map's wording is codecall's own and links to the videos; it does not copy
+them. codecall is not affiliated with or endorsed by the series' creator.
+
 ## Privacy
 
 - No API key, no account, no signup, no network call.
@@ -127,6 +142,13 @@ npm run build
 npm test
 claude plugin validate ./plugins/codecall
 ```
+
+The backend concept map lives in
+`plugins/codecall/skills/codecall/references/backend-map/`, one Markdown file
+per cluster. Edit those files, then run `node scripts/backend-map.mjs` to
+validate them and regenerate `index.md`; `npm test` fails on a stale index, a
+broken prerequisite, a timestamp that is not a real chapter start, or a link
+outside the documentation allowlist.
 
 The canonical skill lives in `plugins/codecall/skills/codecall/`. The
 TypeScript runtime in `src/` is an offline, deterministic test harness for the

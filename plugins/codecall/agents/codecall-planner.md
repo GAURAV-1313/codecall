@@ -40,6 +40,11 @@ your starting evidence — you were not part of the conversation that built it.
    anti-patterns, architecture decisions, and misconceptions distinct. Order by
    prerequisite. Do not reduce a multi-concept implementation to one
    vocabulary item.
+5. Only when the change touches server-side code, read the codecall skill's
+   `references/backend-map/index.md` and follow the skill's "Backend concept
+   map" rule: at most one map id per concept, only when it truly fits, never
+   forced. Order with the ids' `requires`. You may grep `./codecall/*.html`
+   for `codecall-concepts` meta tags to find ids missed in earlier sessions.
 
 ## Output
 
@@ -51,7 +56,7 @@ Judgment: recommend | optional | skip
 Reason: <evidence-backed reason, citing the specific file/decision/signal>
 Estimated minutes: <N>
 Plan:
-  1. <concept> — <one-line why this matters here> [prerequisite: none|<concept>]
+  1. <concept> — <one-line why this matters here> [prerequisite: none|<concept>] [map: <id>|none]
   2. ...
 Evidence limits: <anything the given input didn't establish, if applicable>
 ```

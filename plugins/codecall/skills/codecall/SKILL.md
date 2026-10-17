@@ -36,6 +36,15 @@ metadata is not a background scheduler.
      uncommitted tree; never scan the whole repository. Judge by novelty,
      architecture impact, concept density, dependency depth, difficulty and
      real decisions, not line count.
+   - **Backend concept map:** only when the change touches server-side code
+     (handlers, auth, databases, caching, queues, webhooks, real-time,
+     storage, deployment), read
+     [references/backend-map/index.md](references/backend-map/index.md).
+     Give each planned concept at most one map id, and only when the id means
+     what this change actually does; leave the rest free-form and never bend a
+     concept to fit. Read only the cluster files holding the chosen ids. Use
+     their `requires` to order the plan. When earlier receipts' `codecall-concepts`
+     meta tags show a mapped id as missed and this change exercises it, prefer it.
 3. Show this and wait:
 
    ```text
@@ -59,7 +68,10 @@ metadata is not a background scheduler.
 3. Teach one concept: what it is, why this code needed it, what breaks without
    it, how it connects to the rest, one misconception, a concise mental model.
    Add one real-world analogy only when it clarifies, mapping each part back
-   to the code. The analogy never replaces the technical explanation.
+   to the code. The analogy never replaces the technical explanation. For a
+   mapped concept, read its card in the cluster file first (the planner may
+   only have read the index); its idea, misconceptions and checks are raw
+   material: adapt them to this code, never recite the card.
 4. Ask two checks per concept, one at a time: first an analogy-to-code mapping,
    then an application, dependency, tradeoff or debugging question. Never a
    generic definition, never a batch.
@@ -83,13 +95,18 @@ One screen, big type, no external assets. It holds:
 - The implementation in one line, and the date.
 - Each concept marked ✅ could explain or ❌ could not, with one line of why.
   A concept counts as explained when both checks were answered correctly
-  without a reteach.
+  without a reteach. A ❌ concept with a map id gets one "Go deeper" line
+  holding its card's links, exactly as written there; no other concept gets
+  links.
+- A `codecall-concepts` meta tag listing each mapped concept as `id:ok` or
+  `id:no`, comma-separated; empty when nothing was mapped.
 - The score, `Could explain N of M`, where M is the number of concepts.
 - Three points to remember, grounded in this code.
 - The edge cases to check before reusing the pattern in another project.
 - When earlier receipts exist in `./codecall/`, one streak line read from
   their `codecall-score` and `codecall-date` meta tags: sessions in the last
-  seven days and the running explain rate.
+  seven days and the running explain rate. When a concept an earlier receipt
+  marked `id:no` came back in this session, add its result to that line.
 
 Short identifiers only; never paste source code or conversation text into it.
 
