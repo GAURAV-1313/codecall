@@ -74,7 +74,6 @@
     -webkit-backdrop-filter:blur(12px) saturate(1.4) brightness(1.1);
     backdrop-filter:blur(12px) saturate(1.4) brightness(1.1);
     box-shadow:var(--lg-shadow);
-    will-change:backdrop-filter;
   }
 
   /* ---------- buttons ---------- */
@@ -144,10 +143,8 @@
       inset 0 8px 18px -8px rgba(255,255,255,.24),
       inset 0 -16px 24px -16px rgba(255,255,255,.10),
       0 10px 30px -14px rgba(0,0,0,.18);
-    -webkit-backdrop-filter:blur(3px) saturate(1.6) brightness(1.28);
-    backdrop-filter:blur(3px) saturate(1.6) brightness(1.28);
     filter:blur(7px);
-    will-change:transform,filter;
+    will-change:transform;
   }
   #blobMain{width:180px;height:180px;margin:-90px 0 0 -90px;}
   #blobTrail{width:110px;height:110px;margin:-55px 0 0 -55px;opacity:.6;filter:blur(10px);}
@@ -280,8 +277,8 @@
 </header>
 
 <div id="blobLayer" aria-hidden="true">
-  <div class="glass-blob" id="blobTrail" data-lg="blob-trail"></div>
-  <div class="glass-blob" id="blobMain" data-lg="blob"></div>
+  <div class="glass-blob" id="blobTrail"></div>
+  <div class="glass-blob" id="blobMain"></div>
 </div>
 
 <main id="top">
@@ -493,15 +490,14 @@
   }
 
   var LG_PRESETS = {
-    'nav':          { depth: 17, strength: 115, cab: 6, blur: 8, sat: 1.7,  bri: 1.25 },
+    'nav':          { depth: 17, strength: 115, cab: 6, blur: 8, sat: 1.7,  bri: 1.25, refract: false },
     'btn':          { depth: 14, strength: 100, cab: 5, blur: 5, sat: 1.65, bri: 1.28 },
     'btn-primary':  { depth: 11, strength: 58,  cab: 3, blur: 2, sat: 1.15, bri: 1.06 },
-    'card':         { depth: 19, strength: 125, cab: 6, blur: 7, sat: 1.55, bri: 1.2  },
-    'panel':        { depth: 20, strength: 130, cab: 6, blur: 8, sat: 1.55, bri: 1.2  },
-    /* blob presets skip chromatic aberration (cab:0 -> cheap single-pass filter)
-       since these two redraw their position every rAF tick and need to stay smooth */
-    'blob':         { depth: 18, strength: 120, cab: 0, blur: 3, sat: 1.6,  bri: 1.35 },
-    'blob-trail':   { depth: 14, strength: 90,  cab: 0, blur: 4, sat: 1.55, bri: 1.28 }
+    /* refract:false uses a GPU blur instead of the software SVG filter, whose
+       cost grows with area and re-runs whenever the content behind moves:
+       the fixed nav (page scrolls under it) and the large cards and panel */
+    'card':         { depth: 19, strength: 125, cab: 6, blur: 7, sat: 1.55, bri: 1.2, refract: false },
+    'panel':        { depth: 20, strength: 130, cab: 6, blur: 8, sat: 1.55, bri: 1.2, refract: false }
   };
 
   var supportsUrl = (function(){
@@ -529,7 +525,7 @@
       var h = Math.max(1, Math.round(rect.height));
       var radius = resolveRadius(el, w, h);
 
-      if (supportsUrl) {
+      if (supportsUrl && preset.refract !== false) {
         var filterUrl = getDisplacementFilter({
           width: w, height: h, radius: radius,
           depth: preset.depth, strength: preset.strength, cab: preset.cab
@@ -634,29 +630,39 @@
   var mainPos = { x: target.x, y: target.y };
   var trailPos = { x: target.x, y: target.y };
 
-  window.addEventListener('pointermove', function(e){
-    target.x = e.clientX;
-    target.y = e.clientY;
-  }, { passive: true });
-
   function place(el, pos){
     el.style.transform = 'translate3d(' + pos.x + 'px,' + pos.y + 'px,0)';
   }
 
-  if (reduceMotion) {
-    place(blobMain, target);
-    place(blobTrail, target);
-  } else {
-    (function frame(){
-      requestAnimationFrame(frame);
-      mainPos.x += (target.x - mainPos.x) * 0.16;
-      mainPos.y += (target.y - mainPos.y) * 0.16;
-      trailPos.x += (mainPos.x - trailPos.x) * 0.10;
-      trailPos.y += (mainPos.y - trailPos.y) * 0.10;
-      place(blobMain, mainPos);
-      place(blobTrail, trailPos);
-    })();
+  // The spring loop only runs while the blobs are catching up with the
+  // cursor; it stops once they settle and restarts on the next move.
+  var running = false;
+  function frame(){
+    mainPos.x += (target.x - mainPos.x) * 0.16;
+    mainPos.y += (target.y - mainPos.y) * 0.16;
+    trailPos.x += (mainPos.x - trailPos.x) * 0.10;
+    trailPos.y += (mainPos.y - trailPos.y) * 0.10;
+    place(blobMain, mainPos);
+    place(blobTrail, trailPos);
+    var settled = Math.abs(target.x - trailPos.x) + Math.abs(target.y - trailPos.y) < 0.5;
+    if (settled || document.hidden) { running = false; return; }
+    requestAnimationFrame(frame);
   }
+  function wake(){
+    if (running || reduceMotion) return;
+    running = true;
+    requestAnimationFrame(frame);
+  }
+
+  window.addEventListener('pointermove', function(e){
+    target.x = e.clientX;
+    target.y = e.clientY;
+    if (reduceMotion) { place(blobMain, target); place(blobTrail, target); }
+    else wake();
+  }, { passive: true });
+
+  place(blobMain, mainPos);
+  place(blobTrail, trailPos);
 })();
 </script>
 
