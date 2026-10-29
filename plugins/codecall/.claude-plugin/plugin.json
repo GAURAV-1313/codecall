@@ -1,7 +1,7 @@
 {
   "name": "codecall",
   "version": "1.5.1",
-  "description": "Adaptive implementation-grounded learning for Claude Code.",
+  "description": "Quiz on the code your agent just wrote, trace a request flow, or practise a debugging round with a planted bug.",
   "author": {
     "name": "Gaurav",
     "url": "https://github.com/GAURAV-1313"
@@ -12,6 +12,8 @@
   "keywords": [
     "learning",
     "developer-education",
-    "implementation"
+    "debugging",
+    "interview-prep",
+    "agent-skills"
   ]
 }
